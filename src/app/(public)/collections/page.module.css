@@ -1,0 +1,76 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+    overflow-x: hidden;
+}
+
+.filterBar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0;
+    margin-bottom: 4rem;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.filterItem {
+    display: flex;
+    align-items: center;
+}
+
+.separator {
+    color: #ccc;
+    margin: 0 1rem;
+}
+
+.filterLink {
+    color: #888;
+    position: relative;
+    transition: color 0.3s ease;
+    font-weight: 600;
+    white-space: nowrap;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: inherit;
+    text-transform: inherit;
+    letter-spacing: inherit;
+    font-family: inherit;
+    padding: 0;
+}
+
+.filterLink:hover {
+    color: var(--color-black);
+}
+
+.active {
+    color: var(--color-gold);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 3rem 1.5rem;
+}
+
+@media (min-width: 480px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 768px) {
+    .filterBar {
+        gap: 0;
+    }
+}
+
+@media (min-width: 1024px) {
+    .grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}

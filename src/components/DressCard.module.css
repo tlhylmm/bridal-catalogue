@@ -1,0 +1,36 @@
+.card {
+    display: block;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.imageWrapper {
+    position: relative;
+    aspect-ratio: 3/4;
+    overflow: hidden;
+    background-color: #f0f0f0;
+    margin-bottom: 1rem;
+}
+
+.image {
+    object-fit: cover;
+    transition: transform 0.7s ease;
+}
+
+.card:hover .image {
+    transform: scale(1.05);
+}
+
+.name {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    text-align: center;
+    color: var(--color-black);
+    transition: color 0.3s ease;
+    font-weight: 400;
+    margin-top: 1rem;
+}
+
+.card:hover .name {
+    color: var(--color-gold);
+}
