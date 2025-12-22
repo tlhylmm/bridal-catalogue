@@ -16,6 +16,16 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        // Cache logo for 1 year (rarely changes)
+        source: '/logo.png',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
         // Cache video assets for 1 year
         source: '/api/video/:path*',
         headers: [
