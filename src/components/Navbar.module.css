@@ -17,11 +17,12 @@
 }
 
 .link {
+    font-family: var(--font-serif);
     text-transform: uppercase;
-    letter-spacing: 0.1em;
-    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    font-size: 0.85rem;
     color: var(--color-dark-gray);
-    font-weight: 600;
+    font-weight: 500;
 }
 
 .link:hover {

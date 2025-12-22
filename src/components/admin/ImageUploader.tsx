@@ -1,62 +1,83 @@
 'use client';
 
-import { useState } from 'react';
-import { createClient } from '@/utils/supabase/client';
+import { useState, useEffect } from 'react';
 import { compressImage } from '@/utils/imageCompression';
 
+interface PendingImage {
+    file: File;
+    previewUrl: string;
+}
+
 interface ImageUploaderProps {
-    onUploadComplete: (url: string) => void;
+    onImageReady: (file: File | null) => void;
     label?: string;
     defaultImage?: string;
 }
 
-export default function ImageUploader({ onUploadComplete, label = "Upload Image", defaultImage }: ImageUploaderProps) {
-    const [uploading, setUploading] = useState(false);
-    const [preview, setPreview] = useState<string | undefined>(defaultImage);
+export default function ImageUploader({ onImageReady, label = "Upload Image", defaultImage }: ImageUploaderProps) {
+    const [compressing, setCompressing] = useState(false);
+    const [pendingImage, setPendingImage] = useState<PendingImage | null>(null);
+    const [existingImage, setExistingImage] = useState<string | undefined>(defaultImage);
     const [error, setError] = useState<string | null>(null);
-    const supabase = createClient();
 
-    const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Cleanup preview URL on unmount
+    useEffect(() => {
+        return () => {
+            if (pendingImage?.previewUrl) {
+                URL.revokeObjectURL(pendingImage.previewUrl);
+            }
+        };
+    }, [pendingImage]);
+
+    const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
         try {
-            setUploading(true);
+            setCompressing(true);
             setError(null);
 
             const file = e.target.files?.[0];
             if (!file) return;
 
-            // Compress the image before upload
+            // Compress the image locally
             const compressedFile = await compressImage(file, {
                 maxWidth: 1920,
                 maxHeight: 1920,
                 quality: 0.85
             });
 
-            const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.jpg`;
-
-            const { error: uploadError } = await supabase.storage
-                .from('images')
-                .upload(fileName, compressedFile);
-
-            if (uploadError) {
-                throw uploadError;
+            // Revoke old preview URL if exists
+            if (pendingImage?.previewUrl) {
+                URL.revokeObjectURL(pendingImage.previewUrl);
             }
 
-            const { data } = supabase.storage.from('images').getPublicUrl(fileName);
+            // Create preview URL for compressed file
+            const previewUrl = URL.createObjectURL(compressedFile);
 
-            setPreview(data.publicUrl);
-            onUploadComplete(data.publicUrl);
+            setPendingImage({ file: compressedFile, previewUrl });
+            setExistingImage(undefined);
+            onImageReady(compressedFile);
 
             // Clear the input
             e.target.value = '';
 
         } catch (err: unknown) {
-            console.error('Error uploading image:', err);
+            console.error('Error compressing image:', err);
             const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-            setError('Upload failed: ' + errorMessage);
+            setError('Compression failed: ' + errorMessage);
         } finally {
-            setUploading(false);
+            setCompressing(false);
         }
     };
+
+    const handleRemove = () => {
+        if (pendingImage?.previewUrl) {
+            URL.revokeObjectURL(pendingImage.previewUrl);
+        }
+        setPendingImage(null);
+        setExistingImage(undefined);
+        onImageReady(null);
+    };
+
+    const previewUrl = pendingImage?.previewUrl || existingImage;
 
     return (
         <div style={{ marginBottom: '1rem' }}>
@@ -66,19 +87,43 @@ export default function ImageUploader({ onUploadComplete, label = "Upload Image"
                 <input
                     type="file"
                     accept="image/*"
-                    onChange={handleUpload}
-                    disabled={uploading}
+                    onChange={handleFileSelect}
+                    disabled={compressing}
                     style={{ fontSize: '0.9rem' }}
                 />
-                {uploading && <span style={{ fontSize: '0.8rem', color: '#666' }}>Compressing & Uploading...</span>}
+                {compressing && <span style={{ fontSize: '0.8rem', color: '#666' }}>Compressing...</span>}
             </div>
 
             {error && <p style={{ color: 'red', fontSize: '0.8rem', marginTop: '0.5rem' }}>{error}</p>}
 
-            {preview && (
-                <div style={{ marginTop: '1rem', width: '120px', height: '160px', backgroundColor: '#eee', position: 'relative', borderRadius: '4px', overflow: 'hidden' }}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={preview} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            {previewUrl && (
+                <div style={{ marginTop: '1rem', position: 'relative', width: '120px', height: '160px' }}>
+                    <div style={{ width: '100%', height: '100%', backgroundColor: '#eee', borderRadius: '4px', overflow: 'hidden' }}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={previewUrl} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
+                    <button
+                        type="button"
+                        onClick={handleRemove}
+                        style={{
+                            position: 'absolute',
+                            top: '-8px',
+                            right: '-8px',
+                            width: '24px',
+                            height: '24px',
+                            borderRadius: '50%',
+                            border: 'none',
+                            backgroundColor: '#dc2626',
+                            color: '#fff',
+                            fontSize: '14px',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                        }}
+                    >
+                        ×
+                    </button>
                 </div>
             )}
         </div>

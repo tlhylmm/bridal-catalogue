@@ -1,38 +1,96 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { createFromYouImage } from '@/actions/fromYouActions';
 import { createClient } from '@/utils/supabase/client';
 import { compressImages } from '@/utils/imageCompression';
 
+interface PendingImage {
+    file: File;
+    previewUrl: string;
+}
+
 export default function FromYouForm() {
-    const [imageUrls, setImageUrls] = useState<string[]>([]);
-    const [uploading, setUploading] = useState(false);
+    const [pendingImages, setPendingImages] = useState<PendingImage[]>([]);
+    const [compressing, setCompressing] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [submitting, setSubmitting] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const supabase = createClient();
 
-    const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Cleanup preview URLs on unmount
+    useEffect(() => {
+        return () => {
+            pendingImages.forEach(img => URL.revokeObjectURL(img.previewUrl));
+        };
+    }, [pendingImages]);
+
+    const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files;
         if (!files || files.length === 0) return;
 
-        setUploading(true);
+        setCompressing(true);
         setError(null);
 
         try {
-            // Compress all images
+            // Compress all images locally
             const compressedFiles = await compressImages(Array.from(files), {
                 maxWidth: 1920,
                 maxHeight: 1920,
                 quality: 0.85
             });
 
-            const newUrls: string[] = [];
+            // Create preview URLs for compressed files
+            const newPendingImages: PendingImage[] = compressedFiles.map(file => ({
+                file,
+                previewUrl: URL.createObjectURL(file)
+            }));
 
-            for (let i = 0; i < compressedFiles.length; i++) {
-                const file = compressedFiles[i];
-                const fileName = `fromyou-${Date.now()}-${i}.jpg`;
+            setPendingImages(prev => [...prev, ...newPendingImages]);
+
+            // Clear file input
+            if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
+        } catch (err) {
+            console.error('Error compressing:', err);
+            setError('Failed to compress some images');
+        }
+
+        setCompressing(false);
+    };
+
+    const removeImage = (index: number) => {
+        setPendingImages(prev => {
+            const toRemove = prev[index];
+            if (toRemove) {
+                URL.revokeObjectURL(toRemove.previewUrl);
+            }
+            return prev.filter((_, i) => i !== index);
+        });
+    };
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        if (pendingImages.length === 0) {
+            setError('Please select at least one image');
+            return;
+        }
+
+        setSubmitting(true);
+        setError(null);
+
+        const form = e.currentTarget;
+        const formData = new FormData(form);
+        const caption = formData.get('caption') as string;
+
+        try {
+            // Upload all images and create entries
+            for (let i = 0; i < pendingImages.length; i++) {
+                const { file } = pendingImages[i];
+                const randomStr = Math.random().toString(36).substring(2, 10);
+                const fileName = `fromyou-${Date.now()}-${randomStr}-${i}.jpg`;
 
                 const { error: uploadError } = await supabase.storage
                     .from('images')
@@ -43,51 +101,21 @@ export default function FromYouForm() {
                     continue;
                 }
 
-                const { data } = supabase.storage.from('images').getPublicUrl(fileName);
-                newUrls.push(data.publicUrl);
-            }
+                // Use proxy URL for 1-year browser caching
+                const proxyUrl = `/api/images/${fileName}`;
 
-            setImageUrls(prev => [...prev, ...newUrls]);
-
-            // Clear file input
-            if (fileInputRef.current) {
-                fileInputRef.current.value = '';
-            }
-        } catch (err) {
-            console.error('Error uploading:', err);
-            setError('Failed to upload some images');
-        }
-
-        setUploading(false);
-    };
-
-    const removeImage = (index: number) => {
-        setImageUrls(prev => prev.filter((_, i) => i !== index));
-    };
-
-    const handleSubmit = async (formData: FormData) => {
-        if (imageUrls.length === 0) {
-            setError('Please upload at least one image');
-            return;
-        }
-
-        setSubmitting(true);
-        const caption = formData.get('caption') as string;
-
-        try {
-            // Create an entry for each image with the same caption
-            for (const url of imageUrls) {
                 const data = new FormData();
-                data.append('imageUrl', url);
+                data.append('imageUrl', proxyUrl);
                 data.append('caption', caption || '');
                 await createFromYouImage(data);
             }
 
             // Clear form
-            setImageUrls([]);
+            setPendingImages([]);
             if (fileInputRef.current) {
                 fileInputRef.current.value = '';
             }
+            form.reset();
         } catch (err) {
             console.error('Error saving:', err);
             setError('Failed to save images');
@@ -97,7 +125,7 @@ export default function FromYouForm() {
     };
 
     return (
-        <form action={handleSubmit} className="admin-form">
+        <form onSubmit={handleSubmit} className="admin-form">
             <div className="admin-images-section">
                 <label className="admin-label">Customer Photos (multiple allowed)</label>
 
@@ -107,24 +135,45 @@ export default function FromYouForm() {
                         type="file"
                         accept="image/*"
                         multiple
-                        onChange={handleUpload}
-                        disabled={uploading}
+                        onChange={handleFileSelect}
+                        disabled={compressing || submitting}
                         style={{ fontSize: '0.9rem' }}
                     />
-                    {uploading && <span style={{ fontSize: '0.8rem', color: '#666' }}>Compressing & Uploading...</span>}
+                    {compressing && <span style={{ fontSize: '0.8rem', color: '#666' }}>Compressing...</span>}
                 </div>
 
                 {error && <p style={{ color: 'red', fontSize: '0.8rem', marginBottom: '0.5rem' }}>{error}</p>}
 
-                {imageUrls.length > 0 && (
+                {pendingImages.length > 0 && (
                     <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
-                        {imageUrls.map((url, index) => (
+                        {pendingImages.map((img, index) => (
                             <div key={index} style={{ position: 'relative', width: '80px', height: '80px' }}>
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img src={url} alt={`Upload ${index}`} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '4px' }} />
+                                <img
+                                    src={img.previewUrl}
+                                    alt={`Upload ${index}`}
+                                    style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'cover',
+                                        borderRadius: '4px',
+                                        border: '2px solid var(--color-gold)'
+                                    }}
+                                />
+                                <span style={{
+                                    position: 'absolute',
+                                    bottom: '4px',
+                                    left: '4px',
+                                    background: 'var(--color-gold)',
+                                    color: '#fff',
+                                    fontSize: '8px',
+                                    padding: '2px 4px',
+                                    borderRadius: '2px'
+                                }}>NEW</span>
                                 <button
                                     type="button"
                                     onClick={() => removeImage(index)}
+                                    disabled={submitting}
                                     style={{
                                         position: 'absolute',
                                         top: '-8px',
@@ -163,9 +212,9 @@ export default function FromYouForm() {
             <button
                 type="submit"
                 className="admin-btn admin-btn-primary"
-                disabled={submitting || imageUrls.length === 0}
+                disabled={submitting || pendingImages.length === 0}
             >
-                {submitting ? 'Saving...' : `Add ${imageUrls.length} Photo${imageUrls.length !== 1 ? 's' : ''}`}
+                {submitting ? 'Uploading & Saving...' : `Add ${pendingImages.length} Photo${pendingImages.length !== 1 ? 's' : ''}`}
             </button>
         </form>
     );

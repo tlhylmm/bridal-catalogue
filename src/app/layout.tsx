@@ -1,13 +1,16 @@
 import type { Metadata } from 'next';
-import { Playfair_Display, Lato } from 'next/font/google';
+import { Cormorant_Garamond, Lato } from 'next/font/google';
 import './globals.css';
 
-const playfair = Playfair_Display({
+// Elegant, modern serif for headings and branding
+const cormorant = Cormorant_Garamond({
+  weight: ['300', '400', '500', '600', '700'],
   subsets: ['latin'],
-  variable: '--font-playfair',
+  variable: '--font-cormorant',
   display: 'swap',
 });
 
+// Clean sans-serif for body text
 const lato = Lato({
   weight: ['300', '400', '700'],
   subsets: ['latin'],
@@ -27,7 +30,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${playfair.variable} ${lato.variable}`}>
+      <body className={`${cormorant.variable} ${lato.variable}`}>
         {children}
       </body>
     </html>

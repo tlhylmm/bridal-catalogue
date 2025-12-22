@@ -5,7 +5,7 @@ export default function Footer() {
         <footer className={styles.footer}>
             <div className={styles.socials}>
                 <a href="#" className={styles.link}>Instagram</a>
-                <a href="mailto:info@gultekinataseven.com" className={styles.link}>Contact</a>
+                <a href="/contact" className={styles.link}>Contact</a>
                 <a href="#" className={styles.link}>Pinterest</a>
             </div>
             <p className={styles.copyright}>

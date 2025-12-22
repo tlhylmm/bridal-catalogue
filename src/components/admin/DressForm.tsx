@@ -1,7 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { createDress, updateDress } from '@/actions/dressActions';
+import { createClient } from '@/utils/supabase/client';
+import { useRouter } from 'next/navigation';
 import ImageUploader from './ImageUploader';
 import GalleryUploader from './GalleryUploader';
 
@@ -30,15 +32,141 @@ interface DressFormProps {
 }
 
 export default function DressForm({ collections, dress, isEdit = false }: DressFormProps) {
-    const [mainImageUrl, setMainImageUrl] = useState(dress?.main_image || '');
-    const [galleryImages, setGalleryImages] = useState<string[]>(dress?.gallery_images || []);
+    const [mainImageFile, setMainImageFile] = useState<File | null>(null);
+    const [existingMainImage, setExistingMainImage] = useState(dress?.main_image || '');
+    const [originalMainImage] = useState(dress?.main_image || ''); // Track original for deletion
+    const [pendingGalleryFiles, setPendingGalleryFiles] = useState<File[]>([]);
+    const [existingGalleryImages, setExistingGalleryImages] = useState<string[]>(dress?.gallery_images || []);
+    const [originalGalleryImages] = useState<string[]>(dress?.gallery_images || []); // Track original for deletion
+    const [submitting, setSubmitting] = useState(false);
 
-    const formAction = isEdit && dress?.id
-        ? updateDress.bind(null, dress.id)
-        : createDress;
+    const supabase = createClient();
+    const router = useRouter();
+
+    const handleGalleryChange = useCallback((files: File[], existingUrls: string[]) => {
+        setPendingGalleryFiles(files);
+        setExistingGalleryImages(existingUrls);
+    }, []);
+
+    const handleMainImageChange = useCallback((file: File | null) => {
+        setMainImageFile(file);
+        if (file) {
+            setExistingMainImage(''); // Clear existing if new one is selected
+        }
+    }, []);
+
+    // Helper to extract filename from URL
+    const extractFilename = (url: string): string | null => {
+        try {
+            const urlParts = url.split('/');
+            return urlParts[urlParts.length - 1];
+        } catch {
+            return null;
+        }
+    };
+
+    // Delete images from storage
+    const deleteImagesFromStorage = async (urls: string[]) => {
+        const filenames = urls.map(extractFilename).filter(Boolean) as string[];
+        if (filenames.length > 0) {
+            try {
+                await supabase.storage.from('images').remove(filenames);
+            } catch (err) {
+                console.error('Error deleting images from storage:', err);
+            }
+        }
+    };
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setSubmitting(true);
+
+        try {
+            const form = e.currentTarget;
+            const formData = new FormData(form);
+
+            // Upload main image if there's a new one
+            let mainImageUrl = existingMainImage;
+            if (mainImageFile) {
+                const fileName = `main-${Date.now()}-${Math.random().toString(36).substring(7)}.jpg`;
+                const { error: uploadError } = await supabase.storage
+                    .from('images')
+                    .upload(fileName, mainImageFile);
+
+                if (uploadError) throw uploadError;
+
+                // Use proxy URL for browser caching
+                mainImageUrl = `/api/images/${fileName}`;
+
+                // Delete old main image if it was replaced
+                if (isEdit && originalMainImage && originalMainImage !== mainImageUrl) {
+                    await deleteImagesFromStorage([originalMainImage]);
+                }
+            }
+
+            // Upload pending gallery images
+            const newGalleryUrls: string[] = [];
+            for (let i = 0; i < pendingGalleryFiles.length; i++) {
+                const file = pendingGalleryFiles[i];
+                const fileName = `gallery-${Date.now()}-${Math.random().toString(36).substring(7)}-${i}.jpg`;
+
+                const { error: uploadError } = await supabase.storage
+                    .from('images')
+                    .upload(fileName, file);
+
+                if (uploadError) {
+                    console.error('Gallery upload error:', uploadError);
+                    continue;
+                }
+
+                // Use proxy URL for browser caching
+                newGalleryUrls.push(`/api/images/${fileName}`);
+            }
+
+            // Combine existing and new gallery images
+            const allGalleryImages = [...existingGalleryImages, ...newGalleryUrls];
+
+            // Find removed gallery images and delete them from storage
+            if (isEdit) {
+                const removedImages = originalGalleryImages.filter(
+                    url => !existingGalleryImages.includes(url)
+                );
+                if (removedImages.length > 0) {
+                    await deleteImagesFromStorage(removedImages);
+                }
+            }
+
+            // Set the uploaded URLs in formData
+            formData.set('mainImage', mainImageUrl);
+            formData.set('galleryImages', JSON.stringify(allGalleryImages));
+
+            // Call the server action
+            if (isEdit && dress?.id) {
+                await updateDress(dress.id, formData);
+            } else {
+                await createDress(formData);
+            }
+
+            // Redirect manually (server action redirect throws in client context)
+            router.push('/admin/dresses');
+            router.refresh();
+        } catch (err: unknown) {
+            // Check if it's a Next.js redirect (NEXT_REDIRECT)
+            if (err instanceof Error && err.message.includes('NEXT_REDIRECT')) {
+                // This is expected, redirect is happening
+                router.push('/admin/dresses');
+                router.refresh();
+                return;
+            }
+            console.error('Error submitting form:', err);
+            alert('Failed to save dress. Please try again.');
+        } finally {
+            setSubmitting(false);
+        }
+    };
 
     return (
-        <form action={formAction} className="admin-form">
+        <form onSubmit={handleSubmit} className="admin-form">
             <div className="admin-form-row">
                 <div className="admin-input-group">
                     <label className="admin-label">Name</label>
@@ -119,19 +247,17 @@ export default function DressForm({ collections, dress, isEdit = false }: DressF
                 <ImageUploader
                     label="Main Image"
                     defaultImage={dress?.main_image}
-                    onUploadComplete={(url) => setMainImageUrl(url)}
+                    onImageReady={handleMainImageChange}
                 />
-                <input name="mainImage" type="hidden" value={mainImageUrl} />
 
                 <GalleryUploader
                     defaultImages={dress?.gallery_images}
-                    onImagesChange={(urls) => setGalleryImages(urls)}
+                    onImagesReady={handleGalleryChange}
                 />
-                <input name="galleryImages" type="hidden" value={JSON.stringify(galleryImages)} />
             </div>
 
-            <button type="submit" className="admin-btn admin-btn-primary">
-                {isEdit ? 'Save Changes' : 'Create Dress'}
+            <button type="submit" className="admin-btn admin-btn-primary" disabled={submitting}>
+                {submitting ? 'Uploading & Saving...' : (isEdit ? 'Save Changes' : 'Create Dress')}
             </button>
         </form>
     );

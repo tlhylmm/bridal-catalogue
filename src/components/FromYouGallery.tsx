@@ -29,6 +29,7 @@ export default function FromYouGallery({ images }: FromYouGalleryProps) {
                                 src={img.image_url}
                                 alt={img.caption || 'Customer photo'}
                                 className={styles.image}
+                                loading="lazy"
                             />
                         </div>
                         {img.caption && (

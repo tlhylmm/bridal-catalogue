@@ -13,7 +13,7 @@ export default function Navbar() {
             {/* Left Links - Desktop */}
             <div className={`${styles.links} ${styles.desktop}`}>
                 <Link href="/collections" className={styles.link}>Collections</Link>
-                <Link href="/the-bride" className={styles.link}>The Bride</Link>
+                <Link href="/sales-points" className={styles.link}>Sales Points</Link>
             </div>
 
             {/* Center Logo */}
@@ -31,7 +31,7 @@ export default function Navbar() {
             {/* Right Links - Desktop */}
             <div className={`${styles.links} ${styles.desktop}`}>
                 <Link href="/from-you" className={styles.link}>From You</Link>
-                <Link href="/appointment" className={styles.link}>Appointment</Link>
+                <Link href="/contact" className={styles.link}>Contact Us</Link>
             </div>
 
             {/* Mobile Menu Button */}
@@ -60,9 +60,9 @@ export default function Navbar() {
                     zIndex: 100
                 }}>
                     <Link href="/collections" className={styles.link} onClick={() => setIsMobileMenuOpen(false)}>Collections</Link>
-                    <Link href="/the-bride" className={styles.link} onClick={() => setIsMobileMenuOpen(false)}>The Bride</Link>
+                    <Link href="/sales-points" className={styles.link} onClick={() => setIsMobileMenuOpen(false)}>Sales Points</Link>
                     <Link href="/from-you" className={styles.link} onClick={() => setIsMobileMenuOpen(false)}>From You</Link>
-                    <Link href="/appointment" className={styles.link} onClick={() => setIsMobileMenuOpen(false)}>Appointment</Link>
+                    <Link href="/contact" className={styles.link} onClick={() => setIsMobileMenuOpen(false)}>Contact Us</Link>
                 </div>
             )}
         </nav>
