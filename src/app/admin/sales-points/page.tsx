@@ -47,7 +47,7 @@ export default async function AdminSalesPointsPage() {
                                     <td style={{ fontWeight: 600 }}>{point.name}</td>
                                     <td>
                                         <span style={{ color: '#666', fontSize: '0.9rem' }}>
-                                            {locations.length} location{locations.length !== 1 ? 's' : ''}
+                                            {locations.length} konum:
                                             {cities.length > 0 && ` (${cities.join(', ')})`}
                                         </span>
                                     </td>
