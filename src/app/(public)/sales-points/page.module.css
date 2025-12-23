@@ -47,7 +47,7 @@
     background: none;
     border: none;
     cursor: pointer;
-    font-weight: 300;
+    font-weight: 400;
     font-size: inherit;
     text-transform: inherit;
     letter-spacing: inherit;
@@ -92,12 +92,13 @@
 }
 
 .storeName {
-    font-family: var(--font-serif);
+    font-family: var(--font-montserrat), 'Montserrat', sans-serif;
     font-size: 1.5rem;
     margin-bottom: 1.5rem;
     color: var(--color-black);
     padding-bottom: 1rem;
     border-bottom: 1px solid #eee;
+    text-transform: none;
 }
 
 .locationsList {
@@ -112,6 +113,7 @@
 }
 
 .cityBadge {
+    font-family: var(--font-jost), 'Jost', 'Futura PT', 'Futura', sans-serif;
     display: inline-block;
     background: #f5f3ef;
     color: var(--color-dark-gray);
@@ -125,17 +127,19 @@
 }
 
 .address {
+    font-family: var(--font-montserrat), 'Montserrat', sans-serif;
     color: #555;
-    line-height: 1.6;
-    margin-bottom: 0.5rem;
+    line-height: 1;
+    margin-bottom: 0.3rem;
     white-space: pre-wrap;
 }
 
 .mapLink {
+    font-family: var(--font-montserrat), 'Montserrat', sans-serif;
     display: inline-block;
     color: var(--color-gold);
     font-size: 0.9rem;
-    font-weight: 600;
+    font-weight: 500;
     text-decoration: none;
     transition: opacity 0.2s;
 }

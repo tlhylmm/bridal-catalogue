@@ -35,12 +35,6 @@ export default async function DressPage(props: { params: Promise<{ slug: string 
             <div className={styles.info}>
                 <h1 className={styles.title}>{dress.name}</h1>
 
-                {dress.description && (
-                    <p className={styles.description}>
-                        {dress.description}
-                    </p>
-                )}
-
                 <ul className={styles.detailsList}>
                     {dress.silhouette && (
                         <li className={styles.detailItem}>
@@ -61,6 +55,13 @@ export default async function DressPage(props: { params: Promise<{ slug: string 
                         </li>
                     )}
                 </ul>
+
+                {dress.description && (
+                    <p className={styles.description}>
+                        {dress.description}
+                    </p>
+                )}
+
 
                 <Link href={`/appointment?dress=${dress.slug}`} className={styles.bookButton}>
                     Book an Appointment to Try &apos;{dress.name}&apos;

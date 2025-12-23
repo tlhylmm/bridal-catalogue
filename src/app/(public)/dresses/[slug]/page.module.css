@@ -91,14 +91,14 @@
 .title {
     font-family: var(--font-jost), 'Jost', 'Futura PT', sans-serif;
     font-size: 2rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.1rem;
     line-height: 1.1;
     font-weight: 400;
 }
 
 .description {
     font-family: var(--font-montserrat), 'Montserrat', sans-serif;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
     font-size: 1rem;
     color: var(--color-dark-gray);
     max-width: 100%;
@@ -109,10 +109,10 @@
 
 .detailsList {
     list-style: none;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     border-top: 1px solid #eee;
     border-bottom: 1px solid #eee;
-    padding: 1.5rem 0;
+    padding: 1.1rem 0;
     font-family: var(--font-montserrat), 'Montserrat', sans-serif;
 }
 
