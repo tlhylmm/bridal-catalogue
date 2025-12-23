@@ -64,7 +64,7 @@ export default async function AdminCollectionsPage() {
                                             fontSize: '0.85rem',
                                             color: dressCount > 0 ? '#666' : '#dc2626'
                                         }}>
-                                            {dressCount} dress{dressCount !== 1 ? 'es' : ''}
+                                            {dressCount} gelinlik
                                         </span>
                                     </td>
                                     <td>

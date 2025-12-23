@@ -43,12 +43,18 @@ export default async function AdminDashboard() {
 
             <div className="admin-card">
                 <h2 style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>Hızlı Eylemler</h2>
-                <div style={{ display: 'flex', gap: '1rem' }}>
+                <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                     <Link href="/admin/dresses/new" className="admin-btn admin-btn-primary">
-                        + Yeni Gelinlik Ekle
+                        + Gelinlik Ekle
                     </Link>
                     <Link href="/admin/collections/new" className="admin-btn admin-btn-primary">
-                        + Yeni Koleksiyon Ekle
+                        + Koleksiyon Ekle
+                    </Link>
+                    <Link href="/admin/from-you/new" className="admin-btn admin-btn-primary">
+                        + Sizden Gelen Ekle
+                    </Link>
+                    <Link href="/admin/sales-points/new" className="admin-btn admin-btn-primary">
+                        + Satış Noktası Ekle
                     </Link>
                 </div>
             </div>
