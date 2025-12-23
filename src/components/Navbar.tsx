@@ -12,8 +12,8 @@ export default function Navbar() {
         <nav className={styles.nav}>
             {/* Left Links - Desktop */}
             <div className={`${styles.links} ${styles.desktop}`}>
-                <Link href="/collections" className={styles.link}>Collections</Link>
-                <Link href="/sales-points" className={styles.link}>Sales Points</Link>
+                <Link href="/collections" className={styles.link}>Koleksiyonlar</Link>
+                <Link href="/sales-points" className={styles.link}>Satış Noktaları</Link>
             </div>
 
             {/* Center Logo */}
@@ -30,8 +30,8 @@ export default function Navbar() {
 
             {/* Right Links - Desktop */}
             <div className={`${styles.links} ${styles.desktop}`}>
-                <Link href="/from-you" className={styles.link}>From You</Link>
-                <Link href="/contact" className={styles.link}>Contact Us</Link>
+                <Link href="/from-you" className={styles.link}>Sizden Gelenler</Link>
+                <Link href="/contact" className={styles.link}>Bize Ulaşın</Link>
             </div>
 
             {/* Mobile Menu Button */}
@@ -59,10 +59,10 @@ export default function Navbar() {
                     alignItems: 'center',
                     zIndex: 100
                 }}>
-                    <Link href="/collections" className={styles.link} onClick={() => setIsMobileMenuOpen(false)}>Collections</Link>
-                    <Link href="/sales-points" className={styles.link} onClick={() => setIsMobileMenuOpen(false)}>Sales Points</Link>
-                    <Link href="/from-you" className={styles.link} onClick={() => setIsMobileMenuOpen(false)}>From You</Link>
-                    <Link href="/contact" className={styles.link} onClick={() => setIsMobileMenuOpen(false)}>Contact Us</Link>
+                    <Link href="/collections" className={styles.link} onClick={() => setIsMobileMenuOpen(false)}>Koleksiyonlar</Link>
+                    <Link href="/sales-points" className={styles.link} onClick={() => setIsMobileMenuOpen(false)}>Satış Noktaları</Link>
+                    <Link href="/from-you" className={styles.link} onClick={() => setIsMobileMenuOpen(false)}>Sizden Gelenler</Link>
+                    <Link href="/contact" className={styles.link} onClick={() => setIsMobileMenuOpen(false)}>Bize Ulaşın</Link>
                 </div>
             )}
         </nav>

@@ -12,7 +12,7 @@ export default async function NewDressPage() {
 
     return (
         <div>
-            <h1 className="admin-page-title">Add New Dress</h1>
+            <h1 className="admin-page-title">Yeni Kıyafet Ekle</h1>
             <div className="admin-card">
                 <DressForm collections={collections || []} />
             </div>

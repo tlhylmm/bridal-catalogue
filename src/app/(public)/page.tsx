@@ -40,15 +40,13 @@ export default function Home() {
         {/* Content Overlay */}
         <div className={styles.overlay}>
           <h1 className={styles.headline}>
-            Timeless Elegance for<br />the Modern Bride.
+            Gelinlikte Yeni Bir Tarz<br />Yeni Bir Dokunuş.
           </h1>
           <Link href="/collections" className={styles.ctaButton}>
-            Explore the 2024 Collection
+            Koleksiyonlarımızı Keşfedin
           </Link>
         </div>
       </section>
-
-      {/* TODO: Featured Collection Section */}
     </main>
   );
 }

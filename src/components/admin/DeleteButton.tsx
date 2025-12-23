@@ -10,7 +10,7 @@ export default function DeleteButton({ itemName = 'this item' }: DeleteButtonPro
     const { pending } = useFormStatus();
 
     const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-        if (!confirm(`Are you sure you want to delete ${itemName}?`)) {
+        if (!confirm(`Bunu silmek istediğinize emin misiniz: ${itemName}?`)) {
             e.preventDefault();
         }
     };
@@ -22,7 +22,7 @@ export default function DeleteButton({ itemName = 'this item' }: DeleteButtonPro
             onClick={handleClick}
             className="admin-btn admin-btn-danger"
         >
-            {pending ? 'Deleting...' : 'Delete'}
+            {pending ? 'Siliniyor...' : 'Sil'}
         </button>
     );
 }
@@ -37,14 +37,14 @@ export function DeleteCollectionButton({ collectionName, dressCount }: DeleteCol
 
     const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         // First warning
-        if (!confirm(`Are you sure you want to delete the collection "${collectionName}"?`)) {
+        if (!confirm(`Bu koleksiyonu silmek istediğinize emin misiniz: "${collectionName}"?`)) {
             e.preventDefault();
             return;
         }
 
         // Second warning if there are dresses
         if (dressCount > 0) {
-            if (!confirm(`⚠️ WARNING: This will also permanently delete ${dressCount} dress${dressCount !== 1 ? 'es' : ''} and all their photos!\n\nThis action cannot be undone. Are you absolutely sure?`)) {
+            if (!confirm(`⚠️ UYARI: Bu koleksiyonu silmek aynı zamanda ${dressCount} gelinliği ve tüm fotoğraflarını silecek\n\nBu işlem geri alınamaz. Emin misiniz?`)) {
                 e.preventDefault();
                 return;
             }
@@ -58,7 +58,7 @@ export function DeleteCollectionButton({ collectionName, dressCount }: DeleteCol
             onClick={handleClick}
             className="admin-btn admin-btn-danger"
         >
-            {pending ? 'Deleting...' : 'Delete'}
+            {pending ? 'Siliniyor...' : 'Sil'}
         </button>
     );
 }

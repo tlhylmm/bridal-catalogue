@@ -20,7 +20,7 @@ export default async function EditSalesPointPage(props: { params: Promise<{ id: 
 
     return (
         <div>
-            <h1 className="admin-page-title">Edit Sales Point</h1>
+            <h1 className="admin-page-title">Satış Noktası Düzenle</h1>
             <SalesPointForm
                 initialData={{
                     id: salesPoint.id,

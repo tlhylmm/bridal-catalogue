@@ -53,8 +53,8 @@ export default function FromYouForm() {
                 fileInputRef.current.value = '';
             }
         } catch (err) {
-            console.error('Error compressing:', err);
-            setError('Failed to compress some images');
+            console.error('Sıkıştırma hatası:', err);
+            setError('Bazı fotoğrafları sıkıştırırken hata yaşandı');
         }
 
         setCompressing(false);
@@ -74,7 +74,7 @@ export default function FromYouForm() {
         e.preventDefault();
 
         if (pendingImages.length === 0) {
-            setError('Please select at least one image');
+            setError('Lütfen en az bir fotoğraf seçin.');
             return;
         }
 
@@ -97,7 +97,7 @@ export default function FromYouForm() {
                     .upload(fileName, file);
 
                 if (uploadError) {
-                    console.error('Upload error:', uploadError);
+                    console.error('Yükleme hatası:', uploadError);
                     continue;
                 }
 
@@ -117,8 +117,8 @@ export default function FromYouForm() {
             }
             form.reset();
         } catch (err) {
-            console.error('Error saving:', err);
-            setError('Failed to save images');
+            console.error('Kaydederken Hata:', err);
+            setError('Fotoğrafları kaydederken bir hata yaşandı.');
         }
 
         setSubmitting(false);
@@ -200,12 +200,12 @@ export default function FromYouForm() {
             </div>
 
             <div className="admin-input-group">
-                <label className="admin-label">Caption for all photos (optional)</label>
+                <label className="admin-label">Yüklenen fotoğraflar için açıklama (isteğe bağlı)</label>
                 <input
                     name="caption"
                     type="text"
                     className="admin-input"
-                    placeholder="e.g. Sarah's big day in Istanbul"
+                    placeholder="Ör: Ayşe hanımın düğününden."
                 />
             </div>
 
@@ -214,7 +214,7 @@ export default function FromYouForm() {
                 className="admin-btn admin-btn-primary"
                 disabled={submitting || pendingImages.length === 0}
             >
-                {submitting ? 'Uploading & Saving...' : `Add ${pendingImages.length} Photo${pendingImages.length !== 1 ? 's' : ''}`}
+                {submitting ? 'Yükleniyor & Kaydediliyor...' : `${pendingImages.length} fotoğraf ekle`}
             </button>
         </form>
     );

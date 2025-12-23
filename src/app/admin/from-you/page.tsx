@@ -15,17 +15,17 @@ export default async function AdminFromYouPage() {
 
     return (
         <div>
-            <h1 className="admin-page-title">From You - Customer Gallery</h1>
+            <h1 className="admin-page-title">Sizden Gelenler - Kullanıcı Galerisi</h1>
 
             {/* Add new photo form */}
             <div className="admin-card" style={{ marginBottom: '2rem' }}>
-                <h2 style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>Add New Photo</h2>
+                <h2 style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>Yeni Fotoğraf Ekle</h2>
                 <FromYouForm />
             </div>
 
             {/* Existing photos */}
             <div className="admin-card">
-                <h2 style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>Uploaded Photos</h2>
+                <h2 style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>Yüklü Fotoğraflar</h2>
 
                 {images && images.length > 0 ? (
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem' }}>
@@ -55,7 +55,7 @@ export default async function AdminFromYouPage() {
                     </div>
                 ) : (
                     <p style={{ color: '#888', textAlign: 'center', padding: '2rem' }}>
-                        No photos yet. Add your first one above!
+                        Burada fotoğraf bulunamadı.
                     </p>
                 )}
             </div>

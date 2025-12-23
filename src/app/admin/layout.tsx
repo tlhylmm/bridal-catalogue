@@ -25,16 +25,16 @@ export default async function AdminLayout({
                 </div>
 
                 <nav className="admin-nav">
-                    <Link href="/admin" className="admin-nav-link">Dashboard</Link>
-                    <Link href="/admin/dresses" className="admin-nav-link">Dresses</Link>
-                    <Link href="/admin/collections" className="admin-nav-link">Collections</Link>
-                    <Link href="/admin/from-you" className="admin-nav-link">From You</Link>
-                    <Link href="/admin/sales-points" className="admin-nav-link">Sales Points</Link>
+                    <Link href="/admin" className="admin-nav-link">Kontrol Paneli</Link>
+                    <Link href="/admin/dresses" className="admin-nav-link">Gelinlikler</Link>
+                    <Link href="/admin/collections" className="admin-nav-link">Koleksiyonlar</Link>
+                    <Link href="/admin/from-you" className="admin-nav-link">Sizden Gelenler</Link>
+                    <Link href="/admin/sales-points" className="admin-nav-link">Satış Noktaları</Link>
                 </nav>
 
                 <div className="admin-user">
                     <span className="admin-email">{user.email}</span>
-                    <Link href="/" className="admin-back-link">Return to Site</Link>
+                    <Link href="/" className="admin-back-link">Siteye geri dön</Link>
                 </div>
             </aside>
 

@@ -48,9 +48,9 @@ export default function SalesPointsClient({ salesPoints }: SalesPointsClientProp
 
     return (
         <div className={styles.container}>
-            <h1 className={styles.title}>Sales Points</h1>
+            <h1 className={styles.title}>Satış Noktaları</h1>
             <p className={styles.subtitle}>
-                Find our bridal collections at these exclusive locations
+                Koleksiyonlarımızı bu noktalarda bulabilirsiniz.
             </p>
 
             {/* City Filter */}
@@ -60,7 +60,7 @@ export default function SalesPointsClient({ salesPoints }: SalesPointsClientProp
                         onClick={() => setActiveCity(null)}
                         className={`${styles.filterLink} ${!activeCity ? styles.active : ''}`}
                     >
-                        All Cities
+                        Tüm Şehirler
                     </button>
                     {allCities.map((city) => (
                         <span key={city} className={styles.filterItem}>
@@ -106,7 +106,7 @@ export default function SalesPointsClient({ salesPoints }: SalesPointsClientProp
 
             {filteredData.length === 0 && (
                 <p className={styles.empty}>
-                    No sales points found{activeCity ? ` in ${activeCity}` : ''}.
+                    Satış Noktası Bulunamadı{activeCity ? ` in ${activeCity}` : ''}.
                 </p>
             )}
         </div>

@@ -14,16 +14,16 @@ export default async function FromYouPage() {
 
     return (
         <div className={styles.container}>
-            <h1 className={styles.title}>From You</h1>
+            <h1 className={styles.title}>Sizden Gelenler</h1>
             <p className={styles.subtitle}>
-                Beautiful moments shared by our brides
+                Gelinlerimizin paylaştığı güzel anlar
             </p>
 
             {images && images.length > 0 ? (
                 <FromYouGallery images={images} />
             ) : (
                 <p className={styles.empty}>
-                    No photos yet. Be the first to share your moment!
+                    Burada henüz bir fotoğraf yok.
                 </p>
             )}
         </div>

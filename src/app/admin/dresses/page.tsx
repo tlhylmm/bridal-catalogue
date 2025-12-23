@@ -15,9 +15,9 @@ export default async function AdminDressesPage() {
     return (
         <div>
             <div className="admin-page-header">
-                <h1 className="admin-page-title">Manage Dresses</h1>
+                <h1 className="admin-page-title">Kıyafetleri Yönet</h1>
                 <Link href="/admin/dresses/new" className="admin-btn admin-btn-primary">
-                    + Add New Dress
+                    + Yeni Kıyafet Ekle
                 </Link>
             </div>
 
@@ -25,9 +25,9 @@ export default async function AdminDressesPage() {
                 <table className="admin-table">
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Collection</th>
-                            <th>Actions</th>
+                            <th>Adı</th>
+                            <th>Koleksiyon Sayısı</th>
+                            <th>İşlemler</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,7 +41,7 @@ export default async function AdminDressesPage() {
                                 <td>
                                     <div className="admin-actions">
                                         <Link href={`/admin/dresses/${dress.id}/edit`} className="admin-btn admin-btn-secondary">
-                                            Edit
+                                            Düzenle
                                         </Link>
                                         <form action={deleteDress.bind(null, dress.id)}>
                                             <DeleteButton itemName={dress.name} />
@@ -53,7 +53,7 @@ export default async function AdminDressesPage() {
                         {(!dresses || dresses.length === 0) && (
                             <tr>
                                 <td colSpan={3} style={{ padding: '3rem', textAlign: 'center', color: '#888' }}>
-                                    No dresses found. Add your first one!
+                                    Burada Kıyafet Bulunamadı.
                                 </td>
                             </tr>
                         )}

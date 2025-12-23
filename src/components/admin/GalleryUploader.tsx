@@ -57,8 +57,8 @@ export default function GalleryUploader({ onImagesReady, defaultImages = [] }: G
             // Clear the input
             e.target.value = '';
         } catch (err) {
-            console.error('Error compressing:', err);
-            setError('Failed to compress some images');
+            console.error('Sıkıştırma hatası:', err);
+            setError('Fotoğrafları sıkıştırırken bir hata oluştu.');
         }
 
         setCompressing(false);
@@ -75,7 +75,7 @@ export default function GalleryUploader({ onImagesReady, defaultImages = [] }: G
     };
 
     const removeExistingImage = (index: number) => {
-        if (!confirm('Are you sure you want to remove this image? It will be permanently deleted from storage when you save.')) {
+        if (!confirm('Bu fotoğrafı silmek istediğinize emin misiniz? Kaydettiğinizde kalıcı bir şekilde silinecek.')) {
             return;
         }
         setExistingImages(prev => prev.filter((_, i) => i !== index));

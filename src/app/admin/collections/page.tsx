@@ -33,9 +33,9 @@ export default async function AdminCollectionsPage() {
     return (
         <div>
             <div className="admin-page-header">
-                <h1 className="admin-page-title">Manage Collections</h1>
+                <h1 className="admin-page-title">Koleksiyonları Yönet</h1>
                 <Link href="/admin/collections/new" className="admin-btn admin-btn-primary">
-                    + Add New Collection
+                    + Yeni Koleksiyon Ekle
                 </Link>
             </div>
 
@@ -43,10 +43,10 @@ export default async function AdminCollectionsPage() {
                 <table className="admin-table">
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Slug</th>
-                            <th>Dresses</th>
-                            <th>Actions</th>
+                            <th>Koleksiyon Adı</th>
+                            <th>Link Adı</th>
+                            <th>Kıyafet Sayısı</th>
+                            <th>İşlemler</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -70,7 +70,7 @@ export default async function AdminCollectionsPage() {
                                     <td>
                                         <div className="admin-actions">
                                             <Link href={`/admin/collections/${col.id}/edit`} className="admin-btn admin-btn-secondary">
-                                                Edit
+                                                Düzenle
                                             </Link>
                                             <form action={deleteCollection.bind(null, col.id)}>
                                                 <DeleteCollectionButton
@@ -86,7 +86,7 @@ export default async function AdminCollectionsPage() {
                         {(!collections || collections.length === 0) && (
                             <tr>
                                 <td colSpan={4} style={{ padding: '3rem', textAlign: 'center', color: '#888' }}>
-                                    No collections found. Add your first one!
+                                    Burada koleksiyon bulunamadı.
                                 </td>
                             </tr>
                         )}

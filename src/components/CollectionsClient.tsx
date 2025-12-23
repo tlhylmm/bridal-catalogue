@@ -51,7 +51,7 @@ export default function CollectionsClient({ collections, dresses, initialCategor
 
     // Build filter items with separators
     const allCategories = [
-        { slug: null, name: 'All' },
+        { slug: null, name: 'Tümü' },
         ...collections.map(c => ({ slug: c.slug, name: c.name }))
     ];
 
@@ -86,7 +86,7 @@ export default function CollectionsClient({ collections, dresses, initialCategor
 
             {filteredDresses.length === 0 && (
                 <p style={{ textAlign: 'center', marginTop: '4rem', color: '#888' }}>
-                    No dresses found in this collection.
+                    Bu koleksiyonda ürün bulunamadı.
                 </p>
             )}
         </div>

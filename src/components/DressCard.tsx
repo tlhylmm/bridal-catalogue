@@ -33,7 +33,7 @@ export default function DressCard({ dress }: DressCardProps) {
                         justifyContent: 'center',
                         color: '#888'
                     }}>
-                        No Image
+                        Fotoğraf Yok
                     </div>
                 )}
             </div>

@@ -60,7 +60,7 @@ export default function LoginPage() {
                     fontFamily: 'var(--font-serif)',
                     textAlign: 'center',
                     marginBottom: '2rem'
-                }}>Admin Login</h1>
+                }}>Admin Girişi</h1>
 
                 {error && (
                     <div style={{
@@ -87,7 +87,7 @@ export default function LoginPage() {
                         />
                     </div>
                     <div>
-                        <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, marginBottom: '0.5rem' }}>Password</label>
+                        <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, marginBottom: '0.5rem' }}>Şifre</label>
                         <input
                             type="password"
                             value={password}

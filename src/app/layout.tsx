@@ -27,8 +27,8 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: 'Gültekin Ataseven Atelier | Luxury Wedding Gowns',
-  description: 'Gültekin Ataseven is a luxury bridal atelier creating timeless, elegant wedding dresses for the modern bride. Book your private appointment.',
+  title: 'Gültekin Ataseven | Gelintikte Yeni Bir Tarz',
+  description: 'Gültekin Ataseven, modern gelinler için zamansız ve zarif gelinlikler tasarlayan lüks bir gelinlik atölyesidir. Özel randevunuzu şimdi alın.',
 };
 
 export default function RootLayout({
@@ -37,7 +37,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="tr">
       <body className={`${lato.variable} ${jost.variable} ${montserrat.variable}`}>
         {children}
       </body>

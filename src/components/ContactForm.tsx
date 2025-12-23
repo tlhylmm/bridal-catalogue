@@ -13,15 +13,15 @@ export default function ContactForm() {
         e.preventDefault();
 
         // Build email body
-        const emailBody = `Name: ${name}
+        const emailBody = `İsim: ${name}
 Email: ${email}
-Phone: ${phone}
+Telefon: ${phone}
 
-Message:
+Mesaj:
 ${message}`;
 
         // Create mailto link
-        const subject = encodeURIComponent('Contact Inquiry - Gültekin Ataseven');
+        const subject = encodeURIComponent('İletişim İsteği - Gültekin Ataseven');
         const body = encodeURIComponent(emailBody);
 
         window.location.href = `mailto:info@gultekin.com?subject=${subject}&body=${body}`;
@@ -31,7 +31,7 @@ ${message}`;
         <form className={styles.form} onSubmit={handleSubmit}>
             <div className={styles.row}>
                 <div className={styles.inputGroup}>
-                    <label htmlFor="name" className={styles.label}>Name</label>
+                    <label htmlFor="name" className={styles.label}>İsim</label>
                     <input
                         type="text"
                         id="name"
@@ -57,7 +57,7 @@ ${message}`;
             </div>
 
             <div className={styles.inputGroup}>
-                <label htmlFor="phone" className={styles.label}>Phone (optional)</label>
+                <label htmlFor="phone" className={styles.label}>Telefon (İsteğe Bağlı)</label>
                 <input
                     type="tel"
                     id="phone"
@@ -69,7 +69,7 @@ ${message}`;
             </div>
 
             <div className={styles.inputGroup}>
-                <label htmlFor="message" className={styles.label}>Message</label>
+                <label htmlFor="message" className={styles.label}>Mesaj</label>
                 <textarea
                     id="message"
                     name="message"
@@ -77,12 +77,12 @@ ${message}`;
                     required
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    placeholder="How can we help you?"
+                    placeholder="Size nasıl yardımcı olabiliriz?"
                 ></textarea>
             </div>
 
             <button type="submit" className={styles.submitButton}>
-                Send Message
+                Bize Mail Gönderin
             </button>
         </form>
     );

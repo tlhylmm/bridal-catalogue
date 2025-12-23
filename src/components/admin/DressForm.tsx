@@ -72,7 +72,7 @@ export default function DressForm({ collections, dress, isEdit = false }: DressF
             try {
                 await supabase.storage.from('images').remove(filenames);
             } catch (err) {
-                console.error('Error deleting images from storage:', err);
+                console.error('Depodan fotoğrafı silerken hata oluştu:', err);
             }
         }
     };
@@ -115,7 +115,7 @@ export default function DressForm({ collections, dress, isEdit = false }: DressF
                     .upload(fileName, file);
 
                 if (uploadError) {
-                    console.error('Gallery upload error:', uploadError);
+                    console.error('Galeri yükleme hatası:', uploadError);
                     continue;
                 }
 
@@ -158,8 +158,8 @@ export default function DressForm({ collections, dress, isEdit = false }: DressF
                 router.refresh();
                 return;
             }
-            console.error('Error submitting form:', err);
-            alert('Failed to save dress. Please try again.');
+            console.error('Formu gönderirken hata:', err);
+            alert('Kıyafeti kaydederken bir hata yaşandı. Sitede görüntülenip görüntülenmediğini kontrol edin ve duruma göre tekrar deneyin.');
         } finally {
             setSubmitting(false);
         }
@@ -186,15 +186,15 @@ export default function DressForm({ collections, dress, isEdit = false }: DressF
                         required
                         defaultValue={dress?.slug}
                         className="admin-input"
-                        placeholder="e.g. the-aylin-gown"
+                        placeholder="e.g. the-aylin"
                     />
                 </div>
             </div>
 
             <div className="admin-input-group">
-                <label className="admin-label">Collection</label>
+                <label className="admin-label">Koleksiyon</label>
                 <select name="collectionId" defaultValue={dress?.collection_id || ''} className="admin-select">
-                    <option value="">-- No Collection --</option>
+                    <option value="">-- Koleksiyon Yok --</option>
                     {collections.map((col) => (
                         <option key={col.id} value={col.id}>{col.name}</option>
                     ))}
@@ -213,7 +213,7 @@ export default function DressForm({ collections, dress, isEdit = false }: DressF
 
             <div className="admin-form-row-3">
                 <div className="admin-input-group">
-                    <label className="admin-label">Silhouette</label>
+                    <label className="admin-label">Silüet</label>
                     <input
                         name="silhouette"
                         type="text"
@@ -222,7 +222,7 @@ export default function DressForm({ collections, dress, isEdit = false }: DressF
                     />
                 </div>
                 <div className="admin-input-group">
-                    <label className="admin-label">Fabric</label>
+                    <label className="admin-label">Kumaş</label>
                     <input
                         name="fabric"
                         type="text"
@@ -231,7 +231,7 @@ export default function DressForm({ collections, dress, isEdit = false }: DressF
                     />
                 </div>
                 <div className="admin-input-group">
-                    <label className="admin-label">Neckline</label>
+                    <label className="admin-label">Yaka</label>
                     <input
                         name="neckline"
                         type="text"
@@ -242,10 +242,10 @@ export default function DressForm({ collections, dress, isEdit = false }: DressF
             </div>
 
             <div className="admin-images-section">
-                <h3 className="admin-images-title">Images</h3>
+                <h3 className="admin-images-title">Fotoğraflar</h3>
 
                 <ImageUploader
-                    label="Main Image"
+                    label="Ana Fotoğraf"
                     defaultImage={dress?.main_image}
                     onImageReady={handleMainImageChange}
                 />
@@ -257,7 +257,7 @@ export default function DressForm({ collections, dress, isEdit = false }: DressF
             </div>
 
             <button type="submit" className="admin-btn admin-btn-primary" disabled={submitting}>
-                {submitting ? 'Uploading & Saving...' : (isEdit ? 'Save Changes' : 'Create Dress')}
+                {submitting ? 'Yükleniyor & Kaydediliyor...' : (isEdit ? 'Değişiklikleri Kaydet' : 'Gelinlik Oluştur')}
             </button>
         </form>
     );

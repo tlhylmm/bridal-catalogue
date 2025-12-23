@@ -27,7 +27,7 @@ export default function FromYouGallery({ images }: FromYouGalleryProps) {
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                                 src={img.image_url}
-                                alt={img.caption || 'Customer photo'}
+                                alt={img.caption || 'Müşteri fotoğrafı'}
                                 className={styles.image}
                                 loading="lazy"
                             />

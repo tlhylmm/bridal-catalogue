@@ -51,7 +51,7 @@ export default function SalesPointForm({ initialData }: SalesPointFormProps) {
     return (
         <form action={handleSubmit} className="admin-form" style={{ maxWidth: '800px' }}>
             <div className="admin-input-group">
-                <label className="admin-label">Store Name</label>
+                <label className="admin-label">Mağaza Adı</label>
                 <input
                     name="name"
                     type="text"
@@ -59,7 +59,7 @@ export default function SalesPointForm({ initialData }: SalesPointFormProps) {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
-                    placeholder="e.g. Gültekin Ataseven Bridal House"
+                    placeholder="Ör: X Moda Evi"
                 />
             </div>
 
@@ -107,7 +107,7 @@ export default function SalesPointForm({ initialData }: SalesPointFormProps) {
                                     onChange={(e) => updateLocation(index, 'city', e.target.value)}
                                     required
                                 >
-                                    <option value="">Select a city...</option>
+                                    <option value="">Şehir seçin...</option>
                                     {['Adana', 'Adıyaman', 'Afyon', 'Ağrı', 'Aksaray', 'Amasya', 'Ankara', 'Antalya', 'Ardahan', 'Artvin', 'Aydın', 'Balıkesir', 'Bartın', 'Batman', 'Bayburt', 'Bilecik', 'Bingöl', 'Bitlis', 'Bolu', 'Burdur', 'Bursa', 'Çanakkale', 'Çankırı', 'Çorum', 'Denizli', 'Diyarbakır', 'Düzce', 'Edirne', 'Elazığ', 'Erzincan', 'Erzurum', 'Eskişehir', 'Gaziantep', 'Giresun', 'Gümüşhane', 'Hakkari', 'Hatay', 'Iğdır', 'Isparta', 'İstanbul', 'İzmir', 'Kahramanmaraş', 'Karabük', 'Karaman', 'Kars', 'Kastamonu', 'Kayseri', 'Kilis', 'Kırıkkale', 'Kırklareli', 'Kırşehir', 'Kocaeli', 'Konya', 'Kütahya', 'Malatya', 'Manisa', 'Mardin', 'Mersin', 'Muğla', 'Muş', 'Nevşehir', 'Niğde', 'Ordu', 'Osmaniye', 'Rize', 'Sakarya', 'Samsun', 'Şanlıurfa', 'Siirt', 'Sinop', 'Şırnak', 'Sivas', 'Tekirdağ', 'Tokat', 'Trabzon', 'Tunceli', 'Uşak', 'Van', 'Yalova', 'Yozgat', 'Zonguldak'].map(city => (
                                         <option key={city} value={city}>{city}</option>
                                     ))}
@@ -115,19 +115,19 @@ export default function SalesPointForm({ initialData }: SalesPointFormProps) {
                             </div>
 
                             <div className="admin-input-group">
-                                <label className="admin-label">Address</label>
+                                <label className="admin-label">Adres</label>
                                 <textarea
                                     className="admin-textarea"
                                     value={loc.address}
                                     onChange={(e) => updateLocation(index, 'address', e.target.value)}
                                     required
-                                    placeholder="Full street address"
+                                    placeholder="Tam Adres"
                                     rows={2}
                                 />
                             </div>
 
                             <div className="admin-input-group">
-                                <label className="admin-label">Google Maps Link (optional)</label>
+                                <label className="admin-label">Google Maps Linki (isteğe bağlı)</label>
                                 <input
                                     type="url"
                                     className="admin-input"
@@ -146,12 +146,12 @@ export default function SalesPointForm({ initialData }: SalesPointFormProps) {
                     className="admin-btn admin-btn-secondary"
                     style={{ marginBottom: '1rem' }}
                 >
-                    + Add Another Location
+                    + Bir Adres Daha Ekle
                 </button>
             </div>
 
             <button type="submit" className="admin-btn admin-btn-primary">
-                {initialData ? 'Update Sales Point' : 'Create Sales Point'}
+                {initialData ? 'Satış Noktasını Güncelle' : 'Satış Noktası Oluştur'}
             </button>
         </form>
     );

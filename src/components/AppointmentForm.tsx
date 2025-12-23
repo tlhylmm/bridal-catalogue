@@ -20,24 +20,24 @@ export default function AppointmentForm({ initialMessage = '' }: AppointmentForm
         // Build email body
         const emailBody = `Name: ${name}
 Email: ${email}
-Phone: ${phone}
-Preferred Date: ${date}
+Telefon: ${phone}
+Tercih Edilen Tarih: ${date}
 
-Message:
+Mesaj:
 ${message}`;
 
         // Create mailto link
-        const subject = encodeURIComponent('Appointment Request - Gültekin Ataseven');
+        const subject = encodeURIComponent('Randevu İsteği - Gültekin Ataseven');
         const body = encodeURIComponent(emailBody);
 
-        window.location.href = `mailto:info@gultekin.com?subject=${subject}&body=${body}`;
+        window.location.href = `mailto:info@gultekinataseven.com?subject=${subject}&body=${body}`;
     };
 
     return (
         <form className={styles.form} onSubmit={handleSubmit}>
             <div className={styles.row}>
                 <div className={styles.inputGroup}>
-                    <label htmlFor="name" className={styles.label}>Name</label>
+                    <label htmlFor="name" className={styles.label}>İsim</label>
                     <input
                         type="text"
                         id="name"
@@ -64,7 +64,7 @@ ${message}`;
 
             <div className={styles.row}>
                 <div className={styles.inputGroup}>
-                    <label htmlFor="phone" className={styles.label}>Phone</label>
+                    <label htmlFor="phone" className={styles.label}>Telefon</label>
                     <input
                         type="tel"
                         id="phone"
@@ -75,7 +75,7 @@ ${message}`;
                     />
                 </div>
                 <div className={styles.inputGroup}>
-                    <label htmlFor="date" className={styles.label}>Preferred Date</label>
+                    <label htmlFor="date" className={styles.label}>Tercih Edilen Tarih</label>
                     <input
                         type="date"
                         id="date"
@@ -88,7 +88,7 @@ ${message}`;
             </div>
 
             <div className={styles.inputGroup}>
-                <label htmlFor="message" className={styles.label}>Message</label>
+                <label htmlFor="message" className={styles.label}>Mesaj</label>
                 <textarea
                     id="message"
                     name="message"
@@ -99,7 +99,7 @@ ${message}`;
             </div>
 
             <button type="submit" className={styles.submitButton}>
-                Request Appointment
+                Randevu İsteği Maili Gönder
             </button>
         </form>
     );

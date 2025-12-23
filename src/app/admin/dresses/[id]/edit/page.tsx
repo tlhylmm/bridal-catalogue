@@ -25,7 +25,7 @@ export default async function EditDressPage(props: { params: Promise<{ id: strin
 
     return (
         <div>
-            <h1 className="admin-page-title">Edit Dress</h1>
+            <h1 className="admin-page-title">Kıyafeti Düzenle</h1>
             <div className="admin-card">
                 <DressForm collections={collections || []} dress={dress} isEdit />
             </div>

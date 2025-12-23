@@ -4,12 +4,12 @@ export default function Footer() {
     return (
         <footer className={styles.footer}>
             <div className={styles.socials}>
-                <a href="#" className={styles.link}>Instagram</a>
+                <a href="https://www.instagram.com/gultekinmodaevi/" className={styles.link}>Instagram</a>
+                <a href="https://www.facebook.com/GultekinModaEvi/" className={styles.link}>Facebook</a>
                 <a href="/contact" className={styles.link}>Contact</a>
-                <a href="#" className={styles.link}>Pinterest</a>
             </div>
             <p className={styles.copyright}>
-                © {new Date().getFullYear()} Gültekin Ataseven. All rights reserved.
+                © {new Date().getFullYear()} Gültekin Ataseven. Tüm Hakları Saklıdır.
             </p>
         </footer>
     );

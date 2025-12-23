@@ -38,19 +38,19 @@ export default async function DressPage(props: { params: Promise<{ slug: string 
                 <ul className={styles.detailsList}>
                     {dress.silhouette && (
                         <li className={styles.detailItem}>
-                            <span className={styles.detailLabel}>Silhouette:</span>
+                            <span className={styles.detailLabel}>Silüet:</span>
                             <span>{dress.silhouette}</span>
                         </li>
                     )}
                     {dress.fabric && (
                         <li className={styles.detailItem}>
-                            <span className={styles.detailLabel}>Fabric:</span>
+                            <span className={styles.detailLabel}>Kumaş:</span>
                             <span>{dress.fabric}</span>
                         </li>
                     )}
                     {dress.neckline && (
                         <li className={styles.detailItem}>
-                            <span className={styles.detailLabel}>Neckline:</span>
+                            <span className={styles.detailLabel}>Yaka:</span>
                             <span>{dress.neckline}</span>
                         </li>
                     )}
@@ -64,7 +64,7 @@ export default async function DressPage(props: { params: Promise<{ slug: string 
 
 
                 <Link href={`/appointment?dress=${dress.slug}`} className={styles.bookButton}>
-                    Book an Appointment to Try &apos;{dress.name}&apos;
+                    &apos;{dress.name}&apos; denemek için randevu alın
                 </Link>
             </div>
         </div>

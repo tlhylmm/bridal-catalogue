@@ -22,11 +22,11 @@ export default async function EditCollectionPage(props: { params: Promise<{ id: 
 
     return (
         <div>
-            <h1 className="admin-page-title">Edit Collection</h1>
+            <h1 className="admin-page-title">Koleksiyonu Düzenle</h1>
             <div className="admin-card">
                 <form action={updateWithId} className="admin-form">
                     <div className="admin-input-group">
-                        <label className="admin-label">Collection Name</label>
+                        <label className="admin-label">Koleksiyon Adı</label>
                         <input
                             name="name"
                             type="text"
@@ -36,7 +36,7 @@ export default async function EditCollectionPage(props: { params: Promise<{ id: 
                         />
                     </div>
                     <div className="admin-input-group">
-                        <label className="admin-label">Slug (URL)</label>
+                        <label className="admin-label">Link Adı (.com/isim kısmında görünüşü)</label>
                         <input
                             name="slug"
                             type="text"
@@ -46,7 +46,7 @@ export default async function EditCollectionPage(props: { params: Promise<{ id: 
                         />
                     </div>
                     <button type="submit" className="admin-btn admin-btn-primary">
-                        Save Changes
+                        Kaydet
                     </button>
                 </form>
             </div>

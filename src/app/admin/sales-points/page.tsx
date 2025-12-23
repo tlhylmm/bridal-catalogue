@@ -22,9 +22,9 @@ export default async function AdminSalesPointsPage() {
     return (
         <div>
             <div className="admin-page-header">
-                <h1 className="admin-page-title">Sales Points</h1>
+                <h1 className="admin-page-title">Satış Noktaları</h1>
                 <Link href="/admin/sales-points/new" className="admin-btn admin-btn-primary">
-                    Add Sales Point
+                    Yeni Satış Noktası Ekle
                 </Link>
             </div>
 
@@ -32,9 +32,9 @@ export default async function AdminSalesPointsPage() {
                 <table className="admin-table">
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Locations</th>
-                            <th>Actions</th>
+                            <th>İsim</th>
+                            <th>Lokasyonlar</th>
+                            <th>İşlemler</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -57,7 +57,7 @@ export default async function AdminSalesPointsPage() {
                                                 href={`/admin/sales-points/${point.id}/edit`}
                                                 className="admin-btn admin-btn-secondary"
                                             >
-                                                Edit
+                                                Düzenle
                                             </Link>
                                             <form action={deleteSalesPoint.bind(null, point.id)}>
                                                 <DeleteButton itemName={point.name} />
@@ -70,7 +70,7 @@ export default async function AdminSalesPointsPage() {
                         {(!salesPoints || salesPoints.length === 0) && (
                             <tr>
                                 <td colSpan={3} style={{ textAlign: 'center', color: '#888', padding: '2rem' }}>
-                                    No sales points yet. Add your first one!
+                                    Burada satış noktası bulunamadı.
                                 </td>
                             </tr>
                         )}

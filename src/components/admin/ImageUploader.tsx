@@ -14,7 +14,7 @@ interface ImageUploaderProps {
     defaultImage?: string;
 }
 
-export default function ImageUploader({ onImageReady, label = "Upload Image", defaultImage }: ImageUploaderProps) {
+export default function ImageUploader({ onImageReady, label = "Fotoğraf Yükle", defaultImage }: ImageUploaderProps) {
     const [compressing, setCompressing] = useState(false);
     const [pendingImage, setPendingImage] = useState<PendingImage | null>(null);
     const [existingImage, setExistingImage] = useState<string | undefined>(defaultImage);
@@ -60,9 +60,9 @@ export default function ImageUploader({ onImageReady, label = "Upload Image", de
             e.target.value = '';
 
         } catch (err: unknown) {
-            console.error('Error compressing image:', err);
-            const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-            setError('Compression failed: ' + errorMessage);
+            console.error('Fotoğrafı Sıkıştırırken hata oluştu:', err);
+            const errorMessage = err instanceof Error ? err.message : 'Bilinmeyen hata';
+            setError('Sıkıştırma hatası: ' + errorMessage);
         } finally {
             setCompressing(false);
         }
