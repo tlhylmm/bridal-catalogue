@@ -12,6 +12,7 @@
     flex-wrap: wrap;
     gap: 0;
     margin-bottom: 4rem;
+    font-family: var(--font-jost), 'Jost', 'Futura PT', 'Futura', sans-serif;
     font-size: 0.85rem;
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -31,7 +32,7 @@
     color: #888;
     position: relative;
     transition: color 0.3s ease;
-    font-weight: 600;
+    font-weight: 300;
     white-space: nowrap;
     background: none;
     border: none;

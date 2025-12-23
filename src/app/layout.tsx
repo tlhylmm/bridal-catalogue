@@ -1,20 +1,28 @@
 import type { Metadata } from 'next';
-import { Cormorant_Garamond, Lato } from 'next/font/google';
+import { Lato, Jost, Montserrat } from 'next/font/google';
 import './globals.css';
-
-// Elegant, modern serif for headings and branding
-const cormorant = Cormorant_Garamond({
-  weight: ['300', '400', '500', '600', '700'],
-  subsets: ['latin'],
-  variable: '--font-cormorant',
-  display: 'swap',
-});
 
 // Clean sans-serif for body text
 const lato = Lato({
   weight: ['300', '400', '700'],
   subsets: ['latin'],
   variable: '--font-lato',
+  display: 'swap',
+});
+
+// Geometric sans-serif for titles and nav (Futura PT alternative)
+const jost = Jost({
+  weight: ['300', '400', '500', '600', '700'],
+  subsets: ['latin'],
+  variable: '--font-jost',
+  display: 'swap',
+});
+
+// Elegant sans-serif for descriptions
+const montserrat = Montserrat({
+  weight: ['300', '400', '500'],
+  subsets: ['latin'],
+  variable: '--font-montserrat',
   display: 'swap',
 });
 
@@ -30,7 +38,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${cormorant.variable} ${lato.variable}`}>
+      <body className={`${lato.variable} ${jost.variable} ${montserrat.variable}`}>
         {children}
       </body>
     </html>
