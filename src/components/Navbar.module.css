@@ -8,6 +8,8 @@
     margin: 0 auto;
     position: relative;
     border-bottom: 1px solid var(--color-light-gray);
+    z-index: 1000;
+    background: var(--color-background);
 }
 
 .links {
@@ -33,6 +35,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+    z-index: 1001;
+    /* Ensure logo stays above menu if needed, or menu covers it */
 }
 
 .mobileMenuBtn {
@@ -41,6 +46,90 @@
     border: none;
     font-size: 1.5rem;
     color: var(--color-black);
+    cursor: pointer;
+    z-index: 1002;
+    /* Button above menu */
+    width: 30px;
+    height: 30px;
+    position: relative;
+}
+
+.mobileMenuOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: var(--color-cream);
+
+    /* Centering Layout */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* Vertically center items */
+    gap: 3.5rem;
+    /* Increased gap for cleaner look */
+
+    /* Safety padding to avoid logo overlap on small screens */
+    padding-top: 80px;
+    padding-bottom: 40px;
+
+    z-index: 999;
+
+    /* Animation Properties */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-20px);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    /* Smoother bezier curve */
+}
+
+.mobileMenuOverlay.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.mobileMenuLink {
+    font-size: 1.4rem;
+    /* Larger font size */
+    font-weight: 400;
+    /* Lighter weight for elegance */
+    letter-spacing: 0.15em;
+    /* Wider tracking */
+    color: var(--color-dark-gray);
+    text-decoration: none;
+    transform: translateY(30px);
+    /* Larger initial offset */
+    opacity: 0;
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mobileMenuLink:hover {
+    color: var(--color-gold);
+}
+
+.mobileMenuOverlay.open .mobileMenuLink {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* Staggered animation for links */
+.mobileMenuOverlay.open .mobileMenuLink:nth-child(1) {
+    transition-delay: 0.1s;
+}
+
+.mobileMenuOverlay.open .mobileMenuLink:nth-child(2) {
+    transition-delay: 0.2s;
+}
+
+.mobileMenuOverlay.open .mobileMenuLink:nth-child(3) {
+    transition-delay: 0.3s;
+}
+
+.mobileMenuOverlay.open .mobileMenuLink:nth-child(4) {
+    transition-delay: 0.4s;
 }
 
 /* Tablet & Mobile Breakpoints */

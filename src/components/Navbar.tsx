@@ -2,11 +2,30 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import styles from './Navbar.module.css';
 
 export default function Navbar() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const pathname = usePathname();
+
+    // Close menu when route changes
+    useEffect(() => {
+        setIsMobileMenuOpen(false);
+    }, [pathname]);
+
+    // Prevent scrolling when menu is open
+    useEffect(() => {
+        if (isMobileMenuOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isMobileMenuOpen]);
 
     return (
         <nav className={styles.nav}>
@@ -39,32 +58,18 @@ export default function Navbar() {
                 className={styles.mobileMenuBtn}
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 aria-label="Toggle menu"
+                style={{ zIndex: 1002 }} // Ensure button is above overlay
             >
                 {isMobileMenuOpen ? '✕' : '☰'}
             </button>
 
-            {/* Mobile Menu Overlay */}
-            {isMobileMenuOpen && (
-                <div style={{
-                    position: 'absolute',
-                    top: '100%',
-                    left: 0,
-                    right: 0,
-                    background: 'var(--color-cream)',
-                    padding: '2rem',
-                    borderTop: '1px solid #ddd',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '1rem',
-                    alignItems: 'center',
-                    zIndex: 100
-                }}>
-                    <Link href="/collections" className={styles.link} onClick={() => setIsMobileMenuOpen(false)}>Koleksiyonlar</Link>
-                    <Link href="/sales-points" className={styles.link} onClick={() => setIsMobileMenuOpen(false)}>Satış Noktaları</Link>
-                    <Link href="/from-you" className={styles.link} onClick={() => setIsMobileMenuOpen(false)}>Sizden Gelenler</Link>
-                    <Link href="/contact" className={styles.link} onClick={() => setIsMobileMenuOpen(false)}>Bize Ulaşın</Link>
-                </div>
-            )}
+            {/* Mobile Menu Overlay - Always rendered for CSS transition */}
+            <div className={`${styles.mobileMenuOverlay} ${isMobileMenuOpen ? styles.open : ''}`}>
+                <Link href="/collections" className={`${styles.link} ${styles.mobileMenuLink}`} onClick={() => setIsMobileMenuOpen(false)}>Koleksiyonlar</Link>
+                <Link href="/sales-points" className={`${styles.link} ${styles.mobileMenuLink}`} onClick={() => setIsMobileMenuOpen(false)}>Satış Noktaları</Link>
+                <Link href="/from-you" className={`${styles.link} ${styles.mobileMenuLink}`} onClick={() => setIsMobileMenuOpen(false)}>Sizden Gelenler</Link>
+                <Link href="/contact" className={`${styles.link} ${styles.mobileMenuLink}`} onClick={() => setIsMobileMenuOpen(false)}>Bize Ulaşın</Link>
+            </div>
         </nav>
     );
 }
