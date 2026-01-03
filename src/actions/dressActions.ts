@@ -2,9 +2,13 @@
 
 import { createClient } from '@/utils/supabase/server';
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 
-export async function createDress(formData: FormData) {
+export interface ActionResult {
+    success: boolean;
+    error?: string;
+}
+
+export async function createDress(formData: FormData): Promise<ActionResult> {
     const supabase = await createClient();
     const name = formData.get('name') as string;
     const slug = formData.get('slug') as string;
@@ -32,15 +36,15 @@ export async function createDress(formData: FormData) {
 
     if (error) {
         console.error('Error creating dress:', error);
-        throw new Error('Failed to create dress: ' + error.message);
+        return { success: false, error: error.message };
     }
 
     revalidatePath('/admin/dresses');
     revalidatePath('/collections');
-    redirect('/admin/dresses');
+    return { success: true };
 }
 
-export async function updateDress(id: string, formData: FormData) {
+export async function updateDress(id: string, formData: FormData): Promise<ActionResult> {
     const supabase = await createClient();
     const name = formData.get('name') as string;
     const slug = formData.get('slug') as string;
@@ -68,15 +72,15 @@ export async function updateDress(id: string, formData: FormData) {
 
     if (error) {
         console.error('Error updating dress:', error);
-        throw new Error('Failed to update dress: ' + error.message);
+        return { success: false, error: error.message };
     }
 
     revalidatePath('/admin/dresses');
     revalidatePath('/collections');
-    redirect('/admin/dresses');
+    return { success: true };
 }
 
-export async function deleteDress(id: string) {
+export async function deleteDress(id: string): Promise<ActionResult> {
     const supabase = await createClient();
 
     // First, get the dress to find its images
@@ -119,9 +123,10 @@ export async function deleteDress(id: string) {
 
     if (error) {
         console.error('Error deleting dress:', error);
-        throw new Error('Failed to delete dress');
+        return { success: false, error: error.message };
     }
 
     revalidatePath('/admin/dresses');
     revalidatePath('/collections');
+    return { success: true };
 }

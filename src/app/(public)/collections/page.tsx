@@ -1,5 +1,18 @@
+import { Metadata } from 'next';
 import { createClient } from '@/utils/supabase/server';
 import CollectionsClient from '@/components/CollectionsClient';
+
+export const metadata: Metadata = {
+    title: 'Koleksiyonlar | Gültekin Ataseven',
+    description: 'Gültekin Ataseven gelinlik koleksiyonlarını keşfedin. Modern ve zarif tasarımlarımızla hayalinizdeki gelinliği bulun.',
+    keywords: ['gelinlik', 'koleksiyon', 'gültekin ataseven', 'wedding dress', 'bridal collection'],
+    openGraph: {
+        title: 'Koleksiyonlar | Gültekin Ataseven',
+        description: 'Gültekin Ataseven gelinlik koleksiyonlarını keşfedin.',
+        images: ['/og-image.jpg'],
+        type: 'website',
+    },
+};
 
 export const dynamic = 'force-dynamic';
 

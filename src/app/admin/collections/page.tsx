@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/server';
-import { deleteCollection } from '@/actions/collectionActions';
 import { DeleteCollectionButton } from '@/components/admin/DeleteButton';
 
 export const dynamic = 'force-dynamic';
@@ -72,12 +71,11 @@ export default async function AdminCollectionsPage() {
                                             <Link href={`/admin/collections/${col.id}/edit`} className="admin-btn admin-btn-secondary">
                                                 Düzenle
                                             </Link>
-                                            <form action={deleteCollection.bind(null, col.id)}>
-                                                <DeleteCollectionButton
-                                                    collectionName={col.name}
-                                                    dressCount={dressCount}
-                                                />
-                                            </form>
+                                            <DeleteCollectionButton
+                                                collectionId={col.id}
+                                                collectionName={col.name}
+                                                dressCount={dressCount}
+                                            />
                                         </div>
                                     </td>
                                 </tr>

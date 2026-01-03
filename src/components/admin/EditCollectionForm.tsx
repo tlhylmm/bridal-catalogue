@@ -1,14 +1,20 @@
 'use client';
 
 import { useState } from 'react';
-import { createCollection } from '@/actions/collectionActions';
+import { updateCollection } from '@/actions/collectionActions';
 import { useRouter } from 'next/navigation';
 import { useToast } from './ToastProvider';
 import { generateSlug } from '@/utils/slugify';
 
-export default function CollectionForm() {
-    const [name, setName] = useState('');
-    const [slug, setSlug] = useState('');
+interface Collection {
+    id: string;
+    name: string;
+    slug: string;
+}
+
+export default function EditCollectionForm({ collection }: { collection: Collection }) {
+    const [name, setName] = useState(collection.name);
+    const [slug, setSlug] = useState(collection.slug);
     const [submitting, setSubmitting] = useState(false);
     const router = useRouter();
     const { showToast } = useToast();
@@ -28,29 +34,27 @@ export default function CollectionForm() {
             formData.append('name', name);
             formData.append('slug', slug);
 
-            const result = await createCollection(formData);
+            const result = await updateCollection(collection.id, formData);
 
             if (result.success) {
-                showToast(`'${name}' koleksiyonu başarıyla eklendi!`, 'success');
+                showToast(`'${name}' koleksiyonu başarıyla güncellendi!`, 'success');
                 router.push('/admin/collections');
                 router.refresh();
             } else {
                 showToast(`Hata: ${result.error}`, 'error');
             }
         } catch (err: unknown) {
-            console.error('Koleksiyon eklenirken hata:', err);
-            showToast(`'${name}' koleksiyonu eklenirken hata oluştu!`, 'error');
+            console.error('Koleksiyon güncellenirken hata:', err);
+            showToast(`'${name}' koleksiyonu güncellenirken hata oluştu!`, 'error');
         } finally {
             setSubmitting(false);
         }
     };
 
     return (
-        <form onSubmit={handleSubmit} style={{ maxWidth: '500px', display: 'grid', gap: '1.5rem' }}>
-            <div>
-                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, marginBottom: '0.5rem' }}>
-                    Koleksiyon Adı
-                </label>
+        <form onSubmit={handleSubmit} className="admin-form">
+            <div className="admin-input-group">
+                <label className="admin-label">Koleksiyon Adı</label>
                 <input
                     name="name"
                     type="text"
@@ -59,13 +63,10 @@ export default function CollectionForm() {
                     onChange={(e) => setName(e.target.value)}
                     onBlur={handleNameBlur}
                     className="admin-input"
-                    style={{ width: '100%' }}
                 />
             </div>
-            <div>
-                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, marginBottom: '0.5rem' }}>
-                    Link Adı (.com/isim kısmında görünüşü)
-                </label>
+            <div className="admin-input-group">
+                <label className="admin-label">Link Adı (.com/isim kısmında görünüşü)</label>
                 <input
                     name="slug"
                     type="text"
@@ -73,15 +74,10 @@ export default function CollectionForm() {
                     value={slug}
                     onChange={(e) => setSlug(e.target.value)}
                     className="admin-input"
-                    style={{ width: '100%' }}
                 />
             </div>
-            <button
-                type="submit"
-                className="admin-btn admin-btn-primary"
-                disabled={submitting}
-            >
-                {submitting ? 'Ekleniyor...' : 'Ekle'}
+            <button type="submit" className="admin-btn admin-btn-primary" disabled={submitting}>
+                {submitting ? 'Kaydediliyor...' : 'Kaydet'}
             </button>
         </form>
     );

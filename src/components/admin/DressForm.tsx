@@ -6,6 +6,8 @@ import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
 import ImageUploader from './ImageUploader';
 import GalleryUploader from './GalleryUploader';
+import { useToast } from './ToastProvider';
+import { generateSlug } from '@/utils/slugify';
 
 interface Collection {
     id: string;
@@ -32,16 +34,26 @@ interface DressFormProps {
 }
 
 export default function DressForm({ collections, dress, isEdit = false }: DressFormProps) {
+    const [name, setName] = useState(dress?.name || '');
+    const [slug, setSlug] = useState(dress?.slug || '');
     const [mainImageFile, setMainImageFile] = useState<File | null>(null);
     const [existingMainImage, setExistingMainImage] = useState(dress?.main_image || '');
-    const [originalMainImage] = useState(dress?.main_image || ''); // Track original for deletion
+    const [originalMainImage] = useState(dress?.main_image || '');
     const [pendingGalleryFiles, setPendingGalleryFiles] = useState<File[]>([]);
     const [existingGalleryImages, setExistingGalleryImages] = useState<string[]>(dress?.gallery_images || []);
-    const [originalGalleryImages] = useState<string[]>(dress?.gallery_images || []); // Track original for deletion
+    const [originalGalleryImages] = useState<string[]>(dress?.gallery_images || []);
     const [submitting, setSubmitting] = useState(false);
 
     const supabase = createClient();
     const router = useRouter();
+    const { showToast } = useToast();
+
+    // Auto-generate slug when name field loses focus
+    const handleNameBlur = () => {
+        if (name && !slug) {
+            setSlug(generateSlug(name));
+        }
+    };
 
     const handleGalleryChange = useCallback((files: File[], existingUrls: string[]) => {
         setPendingGalleryFiles(files);
@@ -51,11 +63,10 @@ export default function DressForm({ collections, dress, isEdit = false }: DressF
     const handleMainImageChange = useCallback((file: File | null) => {
         setMainImageFile(file);
         if (file) {
-            setExistingMainImage(''); // Clear existing if new one is selected
+            setExistingMainImage('');
         }
     }, []);
 
-    // Helper to extract filename from URL
     const extractFilename = (url: string): string | null => {
         try {
             const urlParts = url.split('/');
@@ -65,7 +76,6 @@ export default function DressForm({ collections, dress, isEdit = false }: DressF
         }
     };
 
-    // Delete images from storage
     const deleteImagesFromStorage = async (urls: string[]) => {
         const filenames = urls.map(extractFilename).filter(Boolean) as string[];
         if (filenames.length > 0) {
@@ -95,10 +105,8 @@ export default function DressForm({ collections, dress, isEdit = false }: DressF
 
                 if (uploadError) throw uploadError;
 
-                // Use proxy URL for browser caching
                 mainImageUrl = `/api/images/${fileName}`;
 
-                // Delete old main image if it was replaced
                 if (isEdit && originalMainImage && originalMainImage !== mainImageUrl) {
                     await deleteImagesFromStorage([originalMainImage]);
                 }
@@ -119,14 +127,11 @@ export default function DressForm({ collections, dress, isEdit = false }: DressF
                     continue;
                 }
 
-                // Use proxy URL for browser caching
                 newGalleryUrls.push(`/api/images/${fileName}`);
             }
 
-            // Combine existing and new gallery images
             const allGalleryImages = [...existingGalleryImages, ...newGalleryUrls];
 
-            // Find removed gallery images and delete them from storage
             if (isEdit) {
                 const removedImages = originalGalleryImages.filter(
                     url => !existingGalleryImages.includes(url)
@@ -136,129 +141,130 @@ export default function DressForm({ collections, dress, isEdit = false }: DressF
                 }
             }
 
-            // Set the uploaded URLs in formData
             formData.set('mainImage', mainImageUrl);
             formData.set('galleryImages', JSON.stringify(allGalleryImages));
 
-            // Call the server action
+            let result;
             if (isEdit && dress?.id) {
-                await updateDress(dress.id, formData);
+                result = await updateDress(dress.id, formData);
             } else {
-                await createDress(formData);
+                result = await createDress(formData);
             }
 
-            // Redirect manually (server action redirect throws in client context)
-            router.push('/admin/dresses');
-            router.refresh();
-        } catch (err: unknown) {
-            // Check if it's a Next.js redirect (NEXT_REDIRECT)
-            if (err instanceof Error && err.message.includes('NEXT_REDIRECT')) {
-                // This is expected, redirect is happening
+            if (result.success) {
+                showToast(`'${name}' başarıyla ${isEdit ? 'güncellendi' : 'eklendi'}!`, 'success');
                 router.push('/admin/dresses');
                 router.refresh();
-                return;
+            } else {
+                showToast(`Hata: ${result.error}`, 'error');
             }
+        } catch (err: unknown) {
             console.error('Formu gönderirken hata:', err);
-            alert('Kıyafeti kaydederken bir hata yaşandı. Sitede görüntülenip görüntülenmediğini kontrol edin ve duruma göre tekrar deneyin.');
+            showToast(`'${name}' kaydedilirken hata oluştu!`, 'error');
         } finally {
             setSubmitting(false);
         }
     };
 
     return (
-        <form onSubmit={handleSubmit} className="admin-form">
-            <div className="admin-form-row">
+        <>
+            <form onSubmit={handleSubmit} className="admin-form">
+                <div className="admin-form-row">
+                    <div className="admin-input-group">
+                        <label className="admin-label">Name</label>
+                        <input
+                            name="name"
+                            type="text"
+                            required
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            onBlur={handleNameBlur}
+                            className="admin-input"
+                        />
+                    </div>
+                    <div className="admin-input-group">
+                        <label className="admin-label">Slug (URL)</label>
+                        <input
+                            name="slug"
+                            type="text"
+                            required
+                            value={slug}
+                            onChange={(e) => setSlug(e.target.value)}
+                            className="admin-input"
+                            placeholder="e.g. the-aylin"
+                        />
+                    </div>
+                </div>
+
                 <div className="admin-input-group">
-                    <label className="admin-label">Name</label>
-                    <input
-                        name="name"
-                        type="text"
-                        required
-                        defaultValue={dress?.name}
-                        className="admin-input"
+                    <label className="admin-label">Koleksiyon</label>
+                    <select name="collectionId" defaultValue={dress?.collection_id || ''} className="admin-select">
+                        <option value="">-- Koleksiyon Yok --</option>
+                        {collections.map((col) => (
+                            <option key={col.id} value={col.id}>{col.name}</option>
+                        ))}
+                    </select>
+                </div>
+
+                <div className="admin-input-group">
+                    <label className="admin-label">Description</label>
+                    <textarea
+                        name="description"
+                        rows={4}
+                        defaultValue={dress?.description}
+                        className="admin-textarea"
                     />
                 </div>
-                <div className="admin-input-group">
-                    <label className="admin-label">Slug (URL)</label>
-                    <input
-                        name="slug"
-                        type="text"
-                        required
-                        defaultValue={dress?.slug}
-                        className="admin-input"
-                        placeholder="e.g. the-aylin"
+
+                <div className="admin-form-row-3">
+                    <div className="admin-input-group">
+                        <label className="admin-label">Silüet</label>
+                        <input
+                            name="silhouette"
+                            type="text"
+                            defaultValue={dress?.silhouette}
+                            className="admin-input"
+                        />
+                    </div>
+                    <div className="admin-input-group">
+                        <label className="admin-label">Kumaş</label>
+                        <input
+                            name="fabric"
+                            type="text"
+                            defaultValue={dress?.fabric}
+                            className="admin-input"
+                        />
+                    </div>
+                    <div className="admin-input-group">
+                        <label className="admin-label">Yaka</label>
+                        <input
+                            name="neckline"
+                            type="text"
+                            defaultValue={dress?.neckline}
+                            className="admin-input"
+                        />
+                    </div>
+                </div>
+
+                <div className="admin-images-section">
+                    <h3 className="admin-images-title">Fotoğraflar</h3>
+
+                    <ImageUploader
+                        label="Ana Fotoğraf"
+                        defaultImage={dress?.main_image}
+                        onImageReady={handleMainImageChange}
+                    />
+
+                    <GalleryUploader
+                        defaultImages={dress?.gallery_images}
+                        onImagesReady={handleGalleryChange}
                     />
                 </div>
-            </div>
 
-            <div className="admin-input-group">
-                <label className="admin-label">Koleksiyon</label>
-                <select name="collectionId" defaultValue={dress?.collection_id || ''} className="admin-select">
-                    <option value="">-- Koleksiyon Yok --</option>
-                    {collections.map((col) => (
-                        <option key={col.id} value={col.id}>{col.name}</option>
-                    ))}
-                </select>
-            </div>
-
-            <div className="admin-input-group">
-                <label className="admin-label">Description</label>
-                <textarea
-                    name="description"
-                    rows={4}
-                    defaultValue={dress?.description}
-                    className="admin-textarea"
-                />
-            </div>
-
-            <div className="admin-form-row-3">
-                <div className="admin-input-group">
-                    <label className="admin-label">Silüet</label>
-                    <input
-                        name="silhouette"
-                        type="text"
-                        defaultValue={dress?.silhouette}
-                        className="admin-input"
-                    />
-                </div>
-                <div className="admin-input-group">
-                    <label className="admin-label">Kumaş</label>
-                    <input
-                        name="fabric"
-                        type="text"
-                        defaultValue={dress?.fabric}
-                        className="admin-input"
-                    />
-                </div>
-                <div className="admin-input-group">
-                    <label className="admin-label">Yaka</label>
-                    <input
-                        name="neckline"
-                        type="text"
-                        defaultValue={dress?.neckline}
-                        className="admin-input"
-                    />
-                </div>
-            </div>
-
-            <div className="admin-images-section">
-                <h3 className="admin-images-title">Fotoğraflar</h3>
-
-                <ImageUploader
-                    label="Ana Fotoğraf"
-                    defaultImage={dress?.main_image}
-                    onImageReady={handleMainImageChange}
-                />
-
-                <GalleryUploader
-                    defaultImages={dress?.gallery_images}
-                    onImagesReady={handleGalleryChange}
-                />
-            </div>
-
-            <button type="submit" className="admin-btn admin-btn-primary" disabled={submitting}>
-                {submitting ? 'Yükleniyor & Kaydediliyor...' : (isEdit ? 'Değişiklikleri Kaydet' : 'Gelinlik Oluştur')}
-            </button>
-        </form>
+                <button type="submit" className="admin-btn admin-btn-primary" disabled={submitting}>
+                    {submitting ? 'Yükleniyor & Kaydediliyor...' : (isEdit ? 'Değişiklikleri Kaydet' : 'Gelinlik Oluştur')}
+                </button>
+            </form>
+        </>
     );
 }

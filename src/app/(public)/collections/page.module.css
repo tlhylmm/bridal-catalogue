@@ -72,6 +72,51 @@
 
 @media (min-width: 1024px) {
     .grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr);
     }
+}
+
+/* Load More Button */
+.loadMoreContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 4rem;
+}
+
+.loadMoreButton {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-jost), 'Jost', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--color-dark-gray, #4A4A4A);
+    transition: color 0.3s ease;
+    padding: 1rem;
+}
+
+.loadMoreButton:hover {
+    color: var(--color-gold, #D4AF37);
+}
+
+.loadMoreButton svg {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s ease;
+}
+
+.loadMoreButton:hover svg {
+    transform: translateY(4px);
+}
+
+/* Sentinel for infinite scroll */
+.scrollSentinel {
+    height: 1px;
+    width: 100%;
 }

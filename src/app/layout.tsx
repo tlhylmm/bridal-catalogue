@@ -27,8 +27,15 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: 'Gültekin Ataseven | Gelintikte Yeni Bir Tarz',
+  //metadataBase: new URL('https://gultekinataseven.com'),
+  title: 'Gültekin Ataseven | Gelinlikte Yeni Bir Tarz',
   description: 'Gültekin Ataseven, modern gelinler için zamansız ve zarif gelinlikler tasarlayan lüks bir gelinlik atölyesidir. Özel randevunuzu şimdi alın.',
+  openGraph: {
+    title: 'Gültekin Ataseven | Gelinlikte Yeni Bir Tarz',
+    description: 'Modern gelinler için zamansız ve zarif gelinlikler.',
+    images: ['/og-image.jpg'],
+    type: 'website',
+  },
 };
 
 export default function RootLayout({

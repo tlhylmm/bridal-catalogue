@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
+import AdminClientWrapper from '@/components/admin/AdminClientWrapper';
 import './admin.css';
 
 export default async function AdminLayout({
@@ -17,33 +18,35 @@ export default async function AdminLayout({
     }
 
     return (
-        <div className="admin-container">
-            {/* Sidebar */}
-            <aside className="admin-sidebar">
-                <div className="admin-logo">
-                    Gültekin Admin
-                </div>
+        <AdminClientWrapper>
+            <div className="admin-container">
+                {/* Sidebar */}
+                <aside className="admin-sidebar">
+                    <div className="admin-logo">
+                        Gültekin Admin
+                    </div>
 
-                <nav className="admin-nav">
-                    <Link href="/admin" className="admin-nav-link">Kontrol Paneli</Link>
-                    <Link href="/admin/dresses" className="admin-nav-link">Gelinlikler</Link>
-                    <Link href="/admin/collections" className="admin-nav-link">Koleksiyonlar</Link>
-                    <Link href="/admin/from-you" className="admin-nav-link">Sizden Gelenler</Link>
-                    <Link href="/admin/sales-points" className="admin-nav-link">Satış Noktaları</Link>
-                </nav>
+                    <nav className="admin-nav">
+                        <Link href="/admin" className="admin-nav-link">Kontrol Paneli</Link>
+                        <Link href="/admin/dresses" className="admin-nav-link">Gelinlikler</Link>
+                        <Link href="/admin/collections" className="admin-nav-link">Koleksiyonlar</Link>
+                        <Link href="/admin/from-you" className="admin-nav-link">Sizden Gelenler</Link>
+                        <Link href="/admin/sales-points" className="admin-nav-link">Satış Noktaları</Link>
+                    </nav>
 
-                <div className="admin-user">
-                    <span className="admin-email">{user.email}</span>
-                    <Link href="/" className="admin-back-link">Siteye geri dön</Link>
-                </div>
-            </aside>
+                    <div className="admin-user">
+                        <span className="admin-email">{user.email}</span>
+                        <Link href="/" className="admin-back-link">Siteye geri dön</Link>
+                    </div>
+                </aside>
 
-            {/* Main Content */}
-            <main className="admin-main">
-                <div className="admin-content">
-                    {children}
-                </div>
-            </main>
-        </div>
+                {/* Main Content */}
+                <main className="admin-main">
+                    <div className="admin-content">
+                        {children}
+                    </div>
+                </main>
+            </div>
+        </AdminClientWrapper>
     );
 }

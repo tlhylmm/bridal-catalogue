@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/server';
-import { deleteDress } from '@/actions/dressActions';
-import DeleteButton from '@/components/admin/DeleteButton';
+import { DeleteDressButton } from '@/components/admin/DeleteButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -43,9 +42,10 @@ export default async function AdminDressesPage() {
                                         <Link href={`/admin/dresses/${dress.id}/edit`} className="admin-btn admin-btn-secondary">
                                             Düzenle
                                         </Link>
-                                        <form action={deleteDress.bind(null, dress.id)}>
-                                            <DeleteButton itemName={dress.name} />
-                                        </form>
+                                        <DeleteDressButton
+                                            dressId={dress.id}
+                                            dressName={dress.name}
+                                        />
                                     </div>
                                 </td>
                             </tr>

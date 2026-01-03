@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import DressCard from '@/components/DressCard';
 import styles from '../app/(public)/collections/page.module.css';
 
@@ -24,8 +24,12 @@ interface CollectionsClientProps {
     initialCategory?: string;
 }
 
+const ITEMS_PER_LOAD = 12;
+
 export default function CollectionsClient({ collections, dresses, initialCategory }: CollectionsClientProps) {
     const [activeCategory, setActiveCategory] = useState<string | null>(initialCategory || null);
+    const [visibleCount, setVisibleCount] = useState(ITEMS_PER_LOAD);
+    const sentinelRef = useRef<HTMLDivElement>(null);
 
     // Client-side filtering
     const filteredDresses = useMemo(() => {
@@ -38,6 +42,48 @@ export default function CollectionsClient({ collections, dresses, initialCategor
         }
         return dresses.filter(d => d.collection_id === collection.id);
     }, [activeCategory, dresses, collections]);
+
+    // Reset visible count when filter changes
+    useEffect(() => {
+        setVisibleCount(ITEMS_PER_LOAD);
+    }, [activeCategory]);
+
+    // Get only the visible dresses
+    const displayedDresses = useMemo(() => {
+        return filteredDresses.slice(0, visibleCount);
+    }, [filteredDresses, visibleCount]);
+
+    const hasMore = visibleCount < filteredDresses.length;
+
+    const loadMore = useCallback(() => {
+        if (hasMore) {
+            setVisibleCount(prev => prev + ITEMS_PER_LOAD);
+        }
+    }, [hasMore]);
+
+    // Infinite scroll with IntersectionObserver
+    useEffect(() => {
+        const sentinel = sentinelRef.current;
+        if (!sentinel) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting && hasMore) {
+                    loadMore();
+                }
+            },
+            {
+                threshold: 1.0,
+                rootMargin: '0px'
+            }
+        );
+
+        observer.observe(sentinel);
+
+        return () => {
+            observer.disconnect();
+        };
+    }, [hasMore, loadMore]);
 
     const handleCategoryClick = (slug: string | null) => {
         setActiveCategory(slug);
@@ -74,7 +120,7 @@ export default function CollectionsClient({ collections, dresses, initialCategor
 
             {/* Grid */}
             <div className={styles.grid}>
-                {filteredDresses.map(dress => (
+                {displayedDresses.map(dress => (
                     <DressCard key={dress.id} dress={{
                         id: dress.id,
                         name: dress.name,
@@ -89,6 +135,31 @@ export default function CollectionsClient({ collections, dresses, initialCategor
                     Bu koleksiyonda ürün bulunamadı.
                 </p>
             )}
+
+            {/* Load More Button */}
+            {hasMore && (
+                <div className={styles.loadMoreContainer}>
+                    <button onClick={loadMore} className={styles.loadMoreButton}>
+                        <span>Daha Fazla Yükle</span>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M19 14l-7 7m0 0l-7-7m7 7V3"
+                            />
+                        </svg>
+                    </button>
+                </div>
+            )}
+
+            {/* Sentinel for infinite scroll - placed at the very end */}
+            <div ref={sentinelRef} className={styles.scrollSentinel} />
         </div>
     );
 }

@@ -1,3 +1,4 @@
+import { Metadata } from 'next';
 import { createClient } from '@/utils/supabase/server';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
@@ -5,6 +6,42 @@ import styles from './page.module.css';
 import DressGallery from '@/components/DressGallery';
 
 export const dynamic = 'force-dynamic';
+
+// Generate dynamic metadata for each dress
+export async function generateMetadata(
+    props: { params: Promise<{ slug: string }> }
+): Promise<Metadata> {
+    const params = await props.params;
+    const supabase = await createClient();
+
+    const { data: dress } = await supabase
+        .from('dresses')
+        .select('name, description, main_image')
+        .eq('slug', params.slug)
+        .single();
+
+    if (!dress) {
+        return {
+            title: 'Gelinlik Bulunamadı | Gültekin Ataseven',
+        };
+    }
+
+    const description = dress.description
+        ? dress.description.substring(0, 160)
+        : `${dress.name} gelinlik modeli. Gültekin Ataseven'de bu zarif tasarımı keşfedin.`;
+
+    return {
+        title: `${dress.name} | Gültekin Ataseven Gelinlik`,
+        description: description,
+        keywords: [dress.name, 'gelinlik', 'gültekin ataseven', 'wedding dress', 'bridal'],
+        openGraph: {
+            title: `${dress.name} | Gültekin Ataseven`,
+            description: description,
+            images: dress.main_image ? [dress.main_image] : [],
+            type: 'website',
+        },
+    };
+}
 
 export default async function DressPage(props: { params: Promise<{ slug: string }> }) {
     const params = await props.params;

@@ -1,6 +1,6 @@
 import { createClient } from '@/utils/supabase/server';
-import { updateCollection } from '@/actions/collectionActions';
 import { notFound } from 'next/navigation';
+import EditCollectionForm from '@/components/admin/EditCollectionForm';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,37 +18,11 @@ export default async function EditCollectionPage(props: { params: Promise<{ id: 
         notFound();
     }
 
-    const updateWithId = updateCollection.bind(null, collection.id);
-
     return (
         <div>
             <h1 className="admin-page-title">Koleksiyonu Düzenle</h1>
             <div className="admin-card">
-                <form action={updateWithId} className="admin-form">
-                    <div className="admin-input-group">
-                        <label className="admin-label">Koleksiyon Adı</label>
-                        <input
-                            name="name"
-                            type="text"
-                            required
-                            defaultValue={collection.name}
-                            className="admin-input"
-                        />
-                    </div>
-                    <div className="admin-input-group">
-                        <label className="admin-label">Link Adı (.com/isim kısmında görünüşü)</label>
-                        <input
-                            name="slug"
-                            type="text"
-                            required
-                            defaultValue={collection.slug}
-                            className="admin-input"
-                        />
-                    </div>
-                    <button type="submit" className="admin-btn admin-btn-primary">
-                        Kaydet
-                    </button>
-                </form>
+                <EditCollectionForm collection={collection} />
             </div>
         </div>
     );

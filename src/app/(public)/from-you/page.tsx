@@ -1,6 +1,19 @@
+import { Metadata } from 'next';
 import { createClient } from '@/utils/supabase/server';
 import styles from './page.module.css';
 import FromYouGallery from '@/components/FromYouGallery';
+
+export const metadata: Metadata = {
+    title: 'Sizden Gelenler | Gültekin Ataseven',
+    description: 'Gelinlerimizin paylaştığı güzel anlar. Gültekin Ataseven gelinliklerini giyen mutlu gelinlerimizin fotoğrafları.',
+    keywords: ['gelin fotoğrafları', 'müşteri yorumları', 'gültekin ataseven', 'gelinlik', 'bride photos'],
+    openGraph: {
+        title: 'Sizden Gelenler | Gültekin Ataseven',
+        description: 'Mutlu gelinlerimizin fotoğrafları.',
+        images: ['/og-image.jpg'],
+        type: 'website',
+    },
+};
 
 export const dynamic = 'force-dynamic';
 

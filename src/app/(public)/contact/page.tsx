@@ -1,5 +1,18 @@
+import { Metadata } from 'next';
 import styles from './page.module.css';
 import ContactForm from '@/components/ContactForm';
+
+export const metadata: Metadata = {
+    title: 'İletişim | Gültekin Ataseven',
+    description: 'Gültekin Ataseven ile iletişime geçin. Randevu almak, sorularınızı sormak veya bilgi almak için bize ulaşın.',
+    keywords: ['iletişim', 'randevu', 'gültekin ataseven', 'gelinlik', 'contact'],
+    openGraph: {
+        title: 'İletişim | Gültekin Ataseven',
+        description: 'Gültekin Ataseven ile iletişime geçin.',
+        images: ['/og-image.jpg'],
+        type: 'website',
+    },
+};
 
 export default function ContactPage() {
     return (

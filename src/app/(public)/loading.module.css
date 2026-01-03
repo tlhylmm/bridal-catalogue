@@ -1,0 +1,58 @@
+.loadingOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--color-cream, #F7F4F1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.loadingContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.logoContainer {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.logoText {
+    font-family: var(--font-jost), 'Jost', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 300;
+    letter-spacing: 0.3em;
+    color: var(--color-black, #1A1A1A);
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 2px solid var(--color-light-gray, #E5E5E5);
+    border-top-color: var(--color-gold, #D4AF37);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.6;
+    }
+}

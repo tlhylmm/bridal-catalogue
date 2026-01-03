@@ -1,3 +1,6 @@
+'use client';
+
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './DressCard.module.css';
@@ -12,17 +15,27 @@ interface DressCardProps {
 }
 
 export default function DressCard({ dress }: DressCardProps) {
+    const [isImageLoading, setIsImageLoading] = useState(true);
+
     return (
         <Link href={`/dresses/${dress.slug}`} className={styles.card}>
             <div className={styles.imageWrapper}>
                 {dress.mainImage ? (
-                    <Image
-                        src={dress.mainImage}
-                        alt={dress.name}
-                        fill
-                        className={styles.image}
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    />
+                    <>
+                        <Image
+                            src={dress.mainImage}
+                            alt={dress.name}
+                            fill
+                            className={`${styles.image} ${isImageLoading ? styles.imageLoading : ''}`}
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                            onLoad={() => setIsImageLoading(false)}
+                        />
+                        {isImageLoading && (
+                            <div className={styles.spinnerOverlay}>
+                                <div className={styles.imageSpinner}></div>
+                            </div>
+                        )}
+                    </>
                 ) : (
                     <div style={{
                         width: '100%',

@@ -2,9 +2,13 @@
 
 import { createClient } from '@/utils/supabase/server';
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 
-export async function createCollection(formData: FormData) {
+export interface ActionResult {
+    success: boolean;
+    error?: string;
+}
+
+export async function createCollection(formData: FormData): Promise<ActionResult> {
     const supabase = await createClient();
     const name = formData.get('name') as string;
     const slug = formData.get('slug') as string;
@@ -16,15 +20,15 @@ export async function createCollection(formData: FormData) {
 
     if (error) {
         console.error('Error creating collection:', error);
-        throw new Error('Failed to create collection: ' + error.message);
+        return { success: false, error: error.message };
     }
 
     revalidatePath('/admin/collections');
     revalidatePath('/collections');
-    redirect('/admin/collections');
+    return { success: true };
 }
 
-export async function updateCollection(id: string, formData: FormData) {
+export async function updateCollection(id: string, formData: FormData): Promise<ActionResult> {
     const supabase = await createClient();
     const name = formData.get('name') as string;
     const slug = formData.get('slug') as string;
@@ -36,15 +40,15 @@ export async function updateCollection(id: string, formData: FormData) {
 
     if (error) {
         console.error('Error updating collection:', error);
-        throw new Error('Failed to update collection: ' + error.message);
+        return { success: false, error: error.message };
     }
 
     revalidatePath('/admin/collections');
     revalidatePath('/collections');
-    redirect('/admin/collections');
+    return { success: true };
 }
 
-export async function deleteCollection(id: string) {
+export async function deleteCollection(id: string): Promise<ActionResult> {
     const supabase = await createClient();
 
     // First, fetch all dresses in this collection
@@ -90,7 +94,7 @@ export async function deleteCollection(id: string) {
 
         if (dressDeleteError) {
             console.error('Error deleting dresses:', dressDeleteError);
-            throw new Error('Failed to delete dresses in collection');
+            return { success: false, error: 'Failed to delete dresses in collection' };
         }
     }
 
@@ -99,10 +103,11 @@ export async function deleteCollection(id: string) {
 
     if (error) {
         console.error('Error deleting collection:', error);
-        throw new Error('Failed to delete collection');
+        return { success: false, error: error.message };
     }
 
     revalidatePath('/admin/collections');
     revalidatePath('/admin/dresses');
     revalidatePath('/collections');
+    return { success: true };
 }

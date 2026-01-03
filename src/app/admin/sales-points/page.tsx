@@ -1,7 +1,6 @@
 import { createClient } from '@/utils/supabase/server';
 import Link from 'next/link';
-import { deleteSalesPoint } from '@/actions/salesPointActions';
-import DeleteButton from '@/components/admin/DeleteButton';
+import { DeleteSalesPointButton } from '@/components/admin/DeleteButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -59,9 +58,10 @@ export default async function AdminSalesPointsPage() {
                                             >
                                                 Düzenle
                                             </Link>
-                                            <form action={deleteSalesPoint.bind(null, point.id)}>
-                                                <DeleteButton itemName={point.name} />
-                                            </form>
+                                            <DeleteSalesPointButton
+                                                salesPointId={point.id}
+                                                salesPointName={point.name}
+                                            />
                                         </div>
                                     </td>
                                 </tr>
